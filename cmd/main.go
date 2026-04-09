@@ -37,7 +37,6 @@ func main() {
 
 		r := relatorio.Novo(nome)
 
-		// Dados básicos
 		r.Adiciona("VERTICES", relatorio.FormataVertices(g))
 		r.Adiciona("ARESTAS", relatorio.FormataArestas(g))
 		r.Adiciona("LISTA_DE_ADJACENCIA", relatorio.FormataLista(g))
@@ -46,6 +45,7 @@ func main() {
 		// Veja o README para saber como fazer a adição de seções.
 		// -------------------------------------------------------
 		r.Salva(saidas)
+		r.SalvaPNG(saidas, g)
 	}
 
 	fmt.Println("Concluido. Saidas em:", saidas)

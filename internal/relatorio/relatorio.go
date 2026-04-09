@@ -58,6 +58,15 @@ func (r *Relatorio) Salva(caminho string) {
 	os.WriteFile(arquivo, []byte(r.Texto()), 0644)
 }
 
+// SalvaPNG gera um PNG do grafo em caminho/Nome.png
+func (r *Relatorio) SalvaPNG(caminho string, g *grafo.Grafo) {
+	os.MkdirAll(caminho, 0755)
+	gen := GeradorPNG{}
+	if err := gen.Gera(g, r.Nome, caminho); err != nil {
+		fmt.Println("Aviso: nao foi possivel gerar PNG para", r.Nome, "-", err)
+	}
+}
+
 // Imprime exibe no terminal
 func (r *Relatorio) Imprime() {
 	fmt.Print(r.Texto())

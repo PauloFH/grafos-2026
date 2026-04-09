@@ -109,13 +109,11 @@ func (g *Grafo) RemoverAresta(origem, destino string) {
 }
 
 // NumVertices retorna o total de vértices
-// Item 7 - Responsável: Vinicius
 func (g *Grafo) NumVertices() int {
 	return len(g.Vertices)
 }
 
 // NumArestas retorna o total de arestas
-// Item 8 - Responsável: Vinicius
 func (g *Grafo) NumArestas() int {
 	total := 0
 	for _, vizinhos := range g.ListaAdj {
@@ -128,7 +126,6 @@ func (g *Grafo) NumArestas() int {
 }
 
 // SaoAdjacentes verifica se dois vértices são vizinhos
-// Item 6 - Responsável: Paulo Roberto
 func (g *Grafo) SaoAdjacentes(a, b string) bool {
 	vizinhos, ok := g.ListaAdj[a]
 	if !ok {

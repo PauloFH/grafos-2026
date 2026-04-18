@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/PauloFH/grafos-2026/internal/algoritmos"
 	"github.com/PauloFH/grafos-2026/internal/conversoes"
 	"github.com/PauloFH/grafos-2026/internal/leitor"
 	"github.com/PauloFH/grafos-2026/internal/relatorio"
@@ -46,6 +47,10 @@ func main() {
 		conversoes.MatrizParaLista(g, m)
 		r.Adiciona("LISTA_RECONVERTIDA_DA_MATRIZ", relatorio.FormataLista(g))
 		r.Adiciona("SAO_ADJACENTES", relatorio.FormataAdjacentes(g))
+
+		if nome == "GRAFO_1" || nome == "GRAFO_3" {
+			r.Adiciona("BFS", algoritmos.FormataBFS(g, g.Vertices[0]))
+		}
 
 		// -------------------------------------------------------
 		// Veja o README para saber como fazer a adição de seções.

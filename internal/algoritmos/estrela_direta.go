@@ -37,10 +37,18 @@ func MatrizIncidencia(g *grafo.Grafo) ([][]int, []string) {
 // Recebe a matriz e converte para Estrela Direta
 func EstrelaDireta(matriz [][]int, vertices []string) (A []string, IP []int) {
 	numV := len(vertices)
+
+	IP = make([]int, numV+1) // Vetor de ponteiros
+	if len(matriz) == 0 {
+		return []string{}, IP
+	}
+
 	numE := len(matriz[0])
+	if numE == 0 {
+		return []string{}, IP
+	}
 
 	A = make([]string, 0, numE) // Vetor de sucessores
-	IP = make([]int, numV+1)    // Vetor de ponteiros
 
 	ponteiro := 0
 	for i := 0; i < numV; i++ {

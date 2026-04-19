@@ -63,6 +63,7 @@ func main() {
 		conversoes.MatrizParaLista(g, m)
 		r.Adiciona("LISTA_RECONVERTIDA_DA_MATRIZ", relatorio.FormataLista(g))
 		r.Adiciona("SAO_ADJACENTES", relatorio.FormataAdjacentes(g))
+		r.Adiciona("GRAU_DOS_VERTICES", relatorio.FormataGraus(g))
 		r.Adiciona("CONEXO", relatorio.FormataConexo(g))
 		r.Adiciona("CONTAGEM", relatorio.FormataContagem(g))
 		mi, arestas := conversoes.MatrizIncidencia(g)

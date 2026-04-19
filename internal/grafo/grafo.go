@@ -111,3 +111,30 @@ func (g *Grafo) RemoverAresta(origem, destino string) {
 func (g *Grafo) GetVizinhos(id string) []string {
 	return g.ListaAdj[id]
 }
+
+//calcular o grau de cada vertice
+func (g *Grafo) GrauVertice(id string) int {
+	// Busca a lista de vizinhos do vértice
+	vizinhos, existe := g.ListaAdj[id]
+
+	//se não existir, returna grau 0
+	if !existe {
+		return 0
+	}
+	return len(vizinhos)
+}
+
+//calcula o grau de todos os vertices
+func (g *Grafo) GrausVertices() map[string]int {
+	//cria um map para armazenar o grau de cada vértice
+	graus := make(map[string]int)
+
+	//percorre todos os vertices do grafo
+	for _, v := range g.Vertices {
+		// calculando graus
+		graus[v] = len(g.ListaAdj[v])
+	}
+
+	//retorna os graus calculados
+	return graus
+}

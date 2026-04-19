@@ -19,3 +19,95 @@ f -> e, g, h
 g -> f, h
 h -> f, g
 
+--- MATRIZ_DE_ADJACENCIA ---
+        a   b   c   d   e   f   g   h
+   a    0   1   0   0   0   0   0   0
+   b    1   0   1   1   0   0   0   0
+   c    0   1   0   1   1   0   0   0
+   d    0   1   1   0   0   0   0   0
+   e    0   0   1   0   0   1   0   0
+   f    0   0   0   0   1   0   1   1
+   g    0   0   0   0   0   1   0   1
+   h    0   0   0   0   0   1   1   0
+
+--- LISTA_RECONVERTIDA_DA_MATRIZ ---
+a -> b
+b -> a, c, d
+c -> b, d, e
+d -> b, c
+e -> c, f
+f -> e, g, h
+g -> f, h
+h -> f, g
+
+--- SAO_ADJACENTES ---
+  a - b
+  b - c
+  b - d
+  c - d
+  c - e
+  e - f
+  f - g
+  f - h
+  g - h
+
+--- GRAU_DOS_VERTICES ---
+  a: 1
+  b: 3
+  c: 3
+  d: 2
+  e: 2
+  f: 3
+  g: 2
+  h: 2
+
+--- OPERACOES_SOBRE_VERTICES ---
+Estado inicial:
+a -> b
+b -> a, c, d
+c -> b, d, e
+d -> b, c
+e -> c, f
+f -> e, g, h
+g -> f, h
+h -> f, g
+
+Apos adicionar 'x':
+a -> b
+b -> a, c, d
+c -> b, d, e
+d -> b, c
+e -> c, f
+f -> e, g, h
+g -> f, h
+h -> f, g
+x -> (vazio)
+
+Apos remover 'a':
+b -> c, d
+c -> b, d, e
+d -> b, c
+e -> c, f
+f -> e, g, h
+g -> f, h
+h -> f, g
+x -> (vazio)
+
+--- CONEXO ---
+  O grafo e conexo.
+
+--- CONTAGEM ---
+  Total de vertices: 8
+  Total de arestas: 9
+
+--- MATRIZ_DE_INCIDENCIA ---
+         a-b    b-c    b-d    c-d    c-e    e-f    f-g    f-h    g-h
+   a       1      0      0      0      0      0      0      0      0
+   b       1      1      1      0      0      0      0      0      0
+   c       0      1      0      1      1      0      0      0      0
+   d       0      0      1      1      0      0      0      0      0
+   e       0      0      0      0      1      1      0      0      0
+   f       0      0      0      0      0      1      1      1      0
+   g       0      0      0      0      0      0      1      0      1
+   h       0      0      0      0      0      0      0      1      1
+

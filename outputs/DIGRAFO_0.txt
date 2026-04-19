@@ -3,14 +3,14 @@ RELATORIO: DIGRAFO_0
 ==============================================
 
 --- GRAFO_SUBJACENTE ---
-c -> a, f, b
-a -> c, b, d
-f -> c, e, g
-g -> h, f
-h -> g
+a -> b, d, c
 b -> a, c, e
 d -> a, e
-e -> b, f, d
+c -> b, a, f
+e -> b, d, f
+f -> c, e, g
+g -> f, h
+h -> g
 
 --- DFS_TEMPOS_ENTRADA_SAIDA ---
   a: [1, 16]
@@ -54,4 +54,97 @@ e -> f
 f -> g
 g -> h
 h -> (vazio)
+
+--- MATRIZ_DE_ADJACENCIA ---
+        a   b   d   c   e   f   g   h
+   a    0   1   1   0   0   0   0   0
+   b    0   0   0   1   1   0   0   0
+   d    0   0   0   0   1   0   0   0
+   c    1   0   0   0   0   1   0   0
+   e    0   0   0   0   0   1   0   0
+   f    0   0   0   0   0   0   1   0
+   g    0   0   0   0   0   0   0   1
+   h    0   0   0   0   0   0   0   0
+
+--- LISTA_RECONVERTIDA_DA_MATRIZ ---
+a -> b, d
+b -> c, e
+d -> e
+c -> a, f
+e -> f
+f -> g
+g -> h
+h -> (vazio)
+
+--- SAO_ADJACENTES ---
+  a -> b
+  a -> d
+  b -> c
+  b -> e
+  d -> e
+  c -> a
+  c -> f
+  e -> f
+  f -> g
+  g -> h
+
+--- GRAU_DOS_VERTICES ---
+  a: entrada=-1, saida=+2, total=1
+  b: entrada=-1, saida=+2, total=1
+  d: entrada=-1, saida=+1, total=0
+  c: entrada=-1, saida=+2, total=1
+  e: entrada=-2, saida=+1, total=-1
+  f: entrada=-2, saida=+1, total=-1
+  g: entrada=-1, saida=+1, total=0
+  h: entrada=-1, saida=0, total=-1
+
+--- OPERACOES_SOBRE_VERTICES ---
+Estado inicial:
+a -> b, d
+b -> c, e
+d -> e
+c -> a, f
+e -> f
+f -> g
+g -> h
+h -> (vazio)
+
+Apos adicionar 'x':
+a -> b, d
+b -> c, e
+d -> e
+c -> a, f
+e -> f
+f -> g
+g -> h
+h -> (vazio)
+x -> (vazio)
+
+Apos remover 'a':
+b -> c, e
+d -> e
+c -> f
+e -> f
+f -> g
+g -> h
+h -> (vazio)
+x -> (vazio)
+
+--- CONEXO ---
+  O digrafo e fracamente conexo.
+
+--- CONTAGEM ---
+  Total de vertices: 8
+  Total de arestas: 10
+
+--- MATRIZ_DE_INCIDENCIA ---
+        a->b   a->d   b->c   b->e   d->e   c->a   c->f   e->f   f->g   g->h
+   a       1      1      0      0      0     -1      0      0      0      0
+   b      -1      0      1      1      0      0      0      0      0      0
+   d       0     -1      0      0      1      0      0      0      0      0
+   c       0      0     -1      0      0      1      1      0      0      0
+   e       0      0      0     -1     -1      0      0      1      0      0
+   f       0      0      0      0      0      0     -1     -1      1      0
+   g       0      0      0      0      0      0      0      0     -1      1
+   h       0      0      0      0      0      0      0      0      0     -1
 

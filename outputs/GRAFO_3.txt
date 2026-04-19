@@ -28,3 +28,248 @@ o -> m, n
 n -> o, p, q
 p -> n, q
 
+--- MATRIZ_DE_ADJACENCIA ---
+        a   b   c   e   f   d   g   q   j   h   i   l   m   k   o   n   p
+   a    0   1   1   1   1   0   0   0   0   0   0   0   0   0   0   0   0
+   b    1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+   c    1   0   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0
+   e    1   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0
+   f    1   0   0   1   0   1   1   0   0   0   0   0   0   0   0   0   0
+   d    0   0   1   0   1   0   1   1   0   0   0   0   0   0   0   0   0
+   g    0   0   0   0   1   1   0   0   1   0   0   0   0   0   0   0   0
+   q    0   0   0   0   0   1   0   0   0   0   0   0   0   0   0   1   1
+   j    0   0   0   0   0   0   1   0   0   0   1   0   0   1   0   0   0
+   h    0   0   0   0   0   0   0   0   0   0   1   1   1   0   0   0   0
+   i    0   0   0   0   0   0   0   0   1   1   0   0   0   1   0   0   0
+   l    0   0   0   0   0   0   0   0   0   1   0   0   1   1   0   0   0
+   m    0   0   0   0   0   0   0   0   0   1   0   1   0   0   1   0   0
+   k    0   0   0   0   0   0   0   0   1   0   1   1   0   0   0   0   0
+   o    0   0   0   0   0   0   0   0   0   0   0   0   1   0   0   1   0
+   n    0   0   0   0   0   0   0   1   0   0   0   0   0   0   1   0   1
+   p    0   0   0   0   0   0   0   1   0   0   0   0   0   0   0   1   0
+
+--- LISTA_RECONVERTIDA_DA_MATRIZ ---
+a -> b, c, e, f
+b -> a
+c -> a, d
+e -> a, f
+f -> a, e, d, g
+d -> c, f, g, q
+g -> f, d, j
+q -> d, n, p
+j -> g, i, k
+h -> i, l, m
+i -> j, h, k
+l -> h, m, k
+m -> h, l, o
+k -> j, i, l
+o -> m, n
+n -> q, o, p
+p -> q, n
+
+--- SAO_ADJACENTES ---
+  a - b
+  a - c
+  a - e
+  a - f
+  c - d
+  e - f
+  f - d
+  f - g
+  d - g
+  d - q
+  g - j
+  q - n
+  q - p
+  j - i
+  j - k
+  h - i
+  h - l
+  h - m
+  i - k
+  l - m
+  l - k
+  m - o
+  o - n
+  n - p
+
+--- GRAU_DOS_VERTICES ---
+  a: 4
+  b: 1
+  c: 2
+  e: 2
+  f: 4
+  d: 4
+  g: 3
+  q: 3
+  j: 3
+  h: 3
+  i: 3
+  l: 3
+  m: 3
+  k: 3
+  o: 2
+  n: 3
+  p: 2
+
+--- OPERACOES_SOBRE_VERTICES ---
+Estado inicial:
+a -> b, c, e, f
+b -> a
+c -> a, d
+e -> a, f
+f -> a, e, d, g
+d -> c, f, g, q
+g -> f, d, j
+q -> d, n, p
+j -> g, i, k
+h -> i, l, m
+i -> j, h, k
+l -> h, m, k
+m -> h, l, o
+k -> j, i, l
+o -> m, n
+n -> q, o, p
+p -> q, n
+
+Apos adicionar 'x':
+a -> b, c, e, f
+b -> a
+c -> a, d
+e -> a, f
+f -> a, e, d, g
+d -> c, f, g, q
+g -> f, d, j
+q -> d, n, p
+j -> g, i, k
+h -> i, l, m
+i -> j, h, k
+l -> h, m, k
+m -> h, l, o
+k -> j, i, l
+o -> m, n
+n -> q, o, p
+p -> q, n
+x -> (vazio)
+
+Apos remover 'a':
+b -> (vazio)
+c -> d
+e -> f
+f -> e, d, g
+d -> c, f, g, q
+g -> f, d, j
+q -> d, n, p
+j -> g, i, k
+h -> i, l, m
+i -> j, h, k
+l -> h, m, k
+m -> h, l, o
+k -> j, i, l
+o -> m, n
+n -> q, o, p
+p -> q, n
+x -> (vazio)
+
+--- CONEXO ---
+  O grafo e conexo.
+
+--- CONTAGEM ---
+  Total de vertices: 17
+  Total de arestas: 24
+
+--- MATRIZ_DE_INCIDENCIA ---
+         a-b    a-c    a-e    a-f    c-d    e-f    d-f    f-g    d-g    d-q    g-j    n-q    p-q    i-j    j-k    h-i    h-l    h-m    i-k    l-m    k-l    m-o    n-o    n-p
+   a       1      1      1      1      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+   b       1      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+   c       0      1      0      0      1      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+   e       0      0      1      0      0      1      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+   f       0      0      0      1      0      1      1      1      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+   d       0      0      0      0      1      0      1      0      1      1      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+   g       0      0      0      0      0      0      0      1      1      0      1      0      0      0      0      0      0      0      0      0      0      0      0      0
+   q       0      0      0      0      0      0      0      0      0      1      0      1      1      0      0      0      0      0      0      0      0      0      0      0
+   j       0      0      0      0      0      0      0      0      0      0      1      0      0      1      1      0      0      0      0      0      0      0      0      0
+   h       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      1      1      1      0      0      0      0      0      0
+   i       0      0      0      0      0      0      0      0      0      0      0      0      0      1      0      1      0      0      1      0      0      0      0      0
+   l       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      1      0      0      1      1      0      0      0
+   m       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      1      0      1      0      1      0      0
+   k       0      0      0      0      0      0      0      0      0      0      0      0      0      0      1      0      0      0      1      0      1      0      0      0
+   o       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      1      1      0
+   n       0      0      0      0      0      0      0      0      0      0      0      1      0      0      0      0      0      0      0      0      0      0      1      1
+   p       0      0      0      0      0      0      0      0      0      0      0      0      1      0      0      0      0      0      0      0      0      0      0      1
+
+--- BFS ---
+Vértice inicial: a
+Ordem de visita: a -> b -> c -> e -> f -> d -> g -> q -> j -> n -> p -> i -> k -> o -> h -> l -> m
+
+Vértice    Nível    Predecessor
+------------------------------
+a          0        -
+b          1        a
+c          1        a
+e          1        a
+f          1        a
+d          2        c
+g          2        f
+q          3        d
+j          3        g
+n          4        q
+p          4        q
+i          4        j
+k          4        j
+o          5        n
+h          5        i
+l          5        k
+m          6        o
+
+--- DFS ---
+Vértice inicial: a
+Ordem de visita: a -> b -> c -> d -> f -> e -> g -> j -> i -> h -> l -> m -> o -> n -> q -> p -> k
+
+Vértice    Entrada  Saída    Predecessor
+--------------------------------------
+a          0        33       -
+b          1        2        a
+c          3        32       a
+d          4        31       c
+f          5        30       d
+e          6        7        f
+g          8        29       f
+j          9        28       g
+i          10       27       j
+h          11       26       i
+l          12       25       h
+m          13       22       l
+o          14       21       m
+n          15       20       o
+q          16       19       n
+p          17       18       q
+k          23       24       l
+
+--- ARTICULACOES_E_BLOCOS ---
+Vértice    num    lowpt
+--------------------------
+a          0      0
+b          1      1
+c          2      0
+e          5      0
+f          4      0
+d          3      0
+g          6      3
+q          14     3
+j          7      3
+h          9      3
+i          8      3
+l          10     3
+m          11     3
+k          16     7
+o          12     3
+n          13     3
+p          15     13
+
+Articulações: a
+
+Blocos (2):
+  Bloco 1: {a, b}
+  Bloco 2: {a, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q}
+

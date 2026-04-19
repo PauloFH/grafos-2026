@@ -3,23 +3,23 @@ RELATORIO: DIGRAFO3
 ==============================================
 
 --- GRAFO_SUBJACENTE ---
-f -> e, g, a
-e -> f, a
+a -> b, e, f, c
+b -> a, c
+e -> a, f
+f -> a, e, g
+c -> b, a, d
 g -> f, d, j
 d -> c, g
-c -> d, b, a
-k -> i, j, l
-i -> k, h, j
-q -> n, n, p
-n -> q, o, p, q
-m -> h, l, o
-h -> m, i, l
-b -> c, a
-a -> c, b, e, f
-j -> g, k, i
+h -> i, l, m
+i -> h, j, k
+l -> h, k, m
+j -> i, g, k
+k -> l, j, i
+m -> l, h, o
+n -> o, p, q
 o -> n, m
 p -> n, q
-l -> h, k, m
+q -> n, p
 
 --- DFS_TEMPOS_ENTRADA_SAIDA ---
   a: [1, 14]
@@ -95,4 +95,174 @@ n -> o, p, q
 o -> m
 p -> q
 q -> n
+
+--- MATRIZ_DE_ADJACENCIA ---
+        a   b   e   f   c   d   g   h   i   l   j   k   m   n   o   p   q
+   a    0   1   1   1   0   0   0   0   0   0   0   0   0   0   0   0   0
+   b    0   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0
+   e    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+   f    0   0   1   0   0   0   1   0   0   0   0   0   0   0   0   0   0
+   c    1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+   d    0   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0
+   g    0   0   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0
+   h    0   0   0   0   0   0   0   0   1   1   0   0   0   0   0   0   0
+   i    0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0
+   l    0   0   0   0   0   0   0   0   0   0   0   1   1   0   0   0   0
+   j    0   0   0   0   0   0   1   0   0   0   0   1   0   0   0   0   0
+   k    0   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0   0
+   m    0   0   0   0   0   0   0   1   0   0   0   0   0   0   0   0   0
+   n    0   0   0   0   0   0   0   0   0   0   0   0   0   0   1   1   1
+   o    0   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0
+   p    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1
+   q    0   0   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0
+
+--- LISTA_RECONVERTIDA_DA_MATRIZ ---
+a -> b, e, f
+b -> c
+e -> (vazio)
+f -> e, g
+c -> a
+d -> c
+g -> d
+h -> i, l
+i -> j
+l -> k, m
+j -> g, k
+k -> i
+m -> h
+n -> o, p, q
+o -> m
+p -> q
+q -> n
+
+--- SAO_ADJACENTES ---
+  a -> b
+  a -> e
+  a -> f
+  b -> c
+  f -> e
+  f -> g
+  c -> a
+  d -> c
+  g -> d
+  h -> i
+  h -> l
+  i -> j
+  l -> k
+  l -> m
+  j -> g
+  j -> k
+  k -> i
+  m -> h
+  n -> o
+  n -> p
+  n -> q
+  o -> m
+  p -> q
+  q -> n
+
+--- GRAU_DOS_VERTICES ---
+  a: entrada=-1, saida=+3, total=2
+  b: entrada=-1, saida=+1, total=0
+  e: entrada=-2, saida=0, total=-2
+  f: entrada=-1, saida=+2, total=1
+  c: entrada=-2, saida=+1, total=-1
+  d: entrada=-1, saida=+1, total=0
+  g: entrada=-2, saida=+1, total=-1
+  h: entrada=-1, saida=+2, total=1
+  i: entrada=-2, saida=+1, total=-1
+  l: entrada=-1, saida=+2, total=1
+  j: entrada=-1, saida=+2, total=1
+  k: entrada=-2, saida=+1, total=-1
+  m: entrada=-2, saida=+1, total=-1
+  n: entrada=-1, saida=+3, total=2
+  o: entrada=-1, saida=+1, total=0
+  p: entrada=-1, saida=+1, total=0
+  q: entrada=-2, saida=+1, total=-1
+
+--- OPERACOES_SOBRE_VERTICES ---
+Estado inicial:
+a -> b, e, f
+b -> c
+e -> (vazio)
+f -> e, g
+c -> a
+d -> c
+g -> d
+h -> i, l
+i -> j
+l -> k, m
+j -> g, k
+k -> i
+m -> h
+n -> o, p, q
+o -> m
+p -> q
+q -> n
+
+Apos adicionar 'x':
+a -> b, e, f
+b -> c
+e -> (vazio)
+f -> e, g
+c -> a
+d -> c
+g -> d
+h -> i, l
+i -> j
+l -> k, m
+j -> g, k
+k -> i
+m -> h
+n -> o, p, q
+o -> m
+p -> q
+q -> n
+x -> (vazio)
+
+Apos remover 'a':
+b -> c
+e -> (vazio)
+f -> e, g
+c -> (vazio)
+d -> c
+g -> d
+h -> i, l
+i -> j
+l -> k, m
+j -> g, k
+k -> i
+m -> h
+n -> o, p, q
+o -> m
+p -> q
+q -> n
+x -> (vazio)
+
+--- CONEXO ---
+  O digrafo e fracamente conexo.
+
+--- CONTAGEM ---
+  Total de vertices: 17
+  Total de arestas: 24
+
+--- MATRIZ_DE_INCIDENCIA ---
+        a->b   a->e   a->f   b->c   f->e   f->g   c->a   d->c   g->d   h->i   h->l   i->j   l->k   l->m   j->g   j->k   k->i   m->h   n->o   n->p   n->q   o->m   p->q   q->n
+   a       1      1      1      0      0      0     -1      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+   b      -1      0      0      1      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+   e       0     -1      0      0     -1      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+   f       0      0     -1      0      1      1      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+   c       0      0      0     -1      0      0      1     -1      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+   d       0      0      0      0      0      0      0      1     -1      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0
+   g       0      0      0      0      0     -1      0      0      1      0      0      0      0      0     -1      0      0      0      0      0      0      0      0      0
+   h       0      0      0      0      0      0      0      0      0      1      1      0      0      0      0      0      0     -1      0      0      0      0      0      0
+   i       0      0      0      0      0      0      0      0      0     -1      0      1      0      0      0      0     -1      0      0      0      0      0      0      0
+   l       0      0      0      0      0      0      0      0      0      0     -1      0      1      1      0      0      0      0      0      0      0      0      0      0
+   j       0      0      0      0      0      0      0      0      0      0      0     -1      0      0      1      1      0      0      0      0      0      0      0      0
+   k       0      0      0      0      0      0      0      0      0      0      0      0     -1      0      0     -1      1      0      0      0      0      0      0      0
+   m       0      0      0      0      0      0      0      0      0      0      0      0      0     -1      0      0      0      1      0      0      0     -1      0      0
+   n       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      1      1      1      0      0     -1
+   o       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0     -1      0      0      1      0      0
+   p       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0     -1      0      0      1      0
+   q       0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0      0     -1      0     -1      1
 

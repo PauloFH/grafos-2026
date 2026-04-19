@@ -19,3 +19,128 @@ f -> b
 i -> c
 h -> d
 
+--- MATRIZ_DE_ADJACENCIA ---
+        a   b   c   d   e   f   i   h
+   a    0   1   0   0   0   0   0   0
+   b    1   0   1   1   1   1   0   0
+   c    0   1   0   1   1   0   1   0
+   d    0   1   1   0   0   0   0   1
+   e    0   1   1   0   0   0   0   0
+   f    0   1   0   0   0   0   0   0
+   i    0   0   1   0   0   0   0   0
+   h    0   0   0   1   0   0   0   0
+
+--- LISTA_RECONVERTIDA_DA_MATRIZ ---
+a -> b
+b -> a, c, d, e, f
+c -> b, d, e, i
+d -> b, c, h
+e -> b, c
+f -> b
+i -> c
+h -> d
+
+--- SAO_ADJACENTES ---
+  a - b
+  b - c
+  b - d
+  b - e
+  b - f
+  c - d
+  c - e
+  c - i
+  d - h
+
+--- GRAU_DOS_VERTICES ---
+  a: 1
+  b: 5
+  c: 4
+  d: 3
+  e: 2
+  f: 1
+  i: 1
+  h: 1
+
+--- OPERACOES_SOBRE_VERTICES ---
+Estado inicial:
+a -> b
+b -> a, c, d, e, f
+c -> b, d, e, i
+d -> b, c, h
+e -> b, c
+f -> b
+i -> c
+h -> d
+
+Apos adicionar 'x':
+a -> b
+b -> a, c, d, e, f
+c -> b, d, e, i
+d -> b, c, h
+e -> b, c
+f -> b
+i -> c
+h -> d
+x -> (vazio)
+
+Apos remover 'a':
+b -> c, d, e, f
+c -> b, d, e, i
+d -> b, c, h
+e -> b, c
+f -> b
+i -> c
+h -> d
+x -> (vazio)
+
+--- CONEXO ---
+  O grafo e conexo.
+
+--- CONTAGEM ---
+  Total de vertices: 8
+  Total de arestas: 9
+
+--- MATRIZ_DE_INCIDENCIA ---
+         a-b    b-c    b-d    b-e    b-f    c-d    c-e    c-i    d-h
+   a       1      0      0      0      0      0      0      0      0
+   b       1      1      1      1      1      0      0      0      0
+   c       0      1      0      0      0      1      1      1      0
+   d       0      0      1      0      0      1      0      0      1
+   e       0      0      0      1      0      0      1      0      0
+   f       0      0      0      0      1      0      0      0      0
+   i       0      0      0      0      0      0      0      1      0
+   h       0      0      0      0      0      0      0      0      1
+
+--- BFS ---
+Vértice inicial: a
+Ordem de visita: a -> b -> c -> d -> e -> f -> i -> h
+
+Vértice    Nível    Predecessor
+------------------------------
+a          0        -
+b          1        a
+c          2        b
+d          2        b
+e          2        b
+f          2        b
+i          3        c
+h          3        d
+
+--- DFS ---
+Vértice inicial: a
+Ordem de visita: a -> b -> c -> d -> h -> e -> i -> f
+
+Vértice    Entrada  Saída    Predecessor
+--------------------------------------
+a          0        15       -
+b          1        14       a
+c          2        11       b
+d          3        6        c
+h          4        5        d
+e          7        8        c
+i          9        10       c
+f          12       13       b
+
+--- BIPARTIDO ---
+É bipartido: NÃO
+

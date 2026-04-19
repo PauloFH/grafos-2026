@@ -96,13 +96,15 @@ func FormataLista(g *grafo.Grafo) string {
 // FormataVertices gera info básica dos vértices
 func FormataVertices(g *grafo.Grafo) string {
 	return fmt.Sprintf("  Total de vertices: %d\n  Vertices: %s\n",
-		g.NumVertices(), strings.Join(g.Vertices, ", "))
+		algoritmos.TotalVertices(g), strings.Join(g.Vertices, ", "))
 }
 
 // FormataArestas gera info básica das arestas
 func FormataArestas(g *grafo.Grafo) string {
-	return fmt.Sprintf("  Total de arestas: %d\n", g.NumArestas())
+	return fmt.Sprintf("  Total de arestas: %d\n", algoritmos.TotalArestas(g))
 }
+
+const errMatrizInvalida = "  (matriz com dimensoes invalidas)\n"
 
 // FormataMatriz gera o texto da matriz de adjacência
 func FormataMatriz(g *grafo.Grafo, m [][]int) string {
@@ -112,7 +114,7 @@ func FormataMatriz(g *grafo.Grafo, m [][]int) string {
 	}
 	for i := range m {
 		if len(m[i]) != n {
-			return "  (matriz com dimensoes invalidas)\n"
+			return errMatrizInvalida
 		}
 	}
 	var sb strings.Builder
@@ -155,6 +157,63 @@ func FormataGraus(g *grafo.Grafo) string {
 		fmt.Fprintf(&sb, "  %s: %d\n", v, graus[v])
 	}
 
+	return sb.String() // <--- Faltava esse return e a chave abaixo
+}
+
+// FormataConexo indica se o grafo é conexo
+func FormataConexo(g *grafo.Grafo) string {
+	if g.Direcionado {
+		if algoritmos.EhConexo(g) {
+			return "  O digrafo e fracamente conexo.\n"
+		}
+		return "  O digrafo NAO e fracamente conexo.\n"
+	}
+	if algoritmos.EhConexo(g) {
+		return "  O grafo e conexo.\n"
+	}
+	return "  O grafo NAO e conexo.\n"
+}
+
+// FormataContagem exibe total de vértices e arestas
+func FormataContagem(g *grafo.Grafo) string {
+	return fmt.Sprintf("  Total de vertices: %d\n  Total de arestas: %d\n",
+		algoritmos.TotalVertices(g), algoritmos.TotalArestas(g))
+}
+
+// FormataMatrizIncidencia exibe a matriz de incidência com rótulos de colunas
+func FormataMatrizIncidencia(g *grafo.Grafo, m [][]int, arestas [][2]string) string {
+	if len(arestas) == 0 {
+		return "  (sem arestas)\n"
+	}
+	if len(m) != len(g.Vertices) {
+		return errMatrizInvalida
+	}
+	for i := range m {
+		if len(m[i]) != len(arestas) {
+			return errMatrizInvalida
+		}
+	}
+
+	sep := "-"
+	if g.Direcionado {
+		sep = "->"
+	}
+
+	var sb strings.Builder
+
+	fmt.Fprintf(&sb, "%5s", "")
+	for _, a := range arestas {
+		fmt.Fprintf(&sb, "%7s", a[0]+sep+a[1])
+	}
+	sb.WriteByte('\n')
+
+	for i, v := range g.Vertices {
+		fmt.Fprintf(&sb, "%4s ", v)
+		for _, val := range m[i] {
+			fmt.Fprintf(&sb, "%7d", val)
+		}
+		sb.WriteByte('\n')
+	}
 	return sb.String()
 }
 

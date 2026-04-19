@@ -40,7 +40,6 @@ func (g *Grafo) AdicionarVertice(id string) {
 }
 
 // RemoverVertice exclui um vértice e suas conexões
-// Item 10 - Responsável: João Marcelo
 func (g *Grafo) RemoverVertice(id string) {
 	// Remove das listas dos outros vértices
 	for v, vizinhos := range g.ListaAdj {
@@ -106,23 +105,6 @@ func (g *Grafo) RemoverAresta(origem, destino string) {
 			g.ListaAdj[destino] = novos
 		}
 	}
-}
-
-// NumVertices retorna o total de vértices
-func (g *Grafo) NumVertices() int {
-	return len(g.Vertices)
-}
-
-// NumArestas retorna o total de arestas
-func (g *Grafo) NumArestas() int {
-	total := 0
-	for _, vizinhos := range g.ListaAdj {
-		total += len(vizinhos)
-	}
-	if !g.Direcionado {
-		total /= 2
-	}
-	return total
 }
 
 // GetVizinhos retorna os vizinhos de um vértice

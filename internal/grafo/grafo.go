@@ -25,7 +25,6 @@ func NovoGrafo(direcionado bool, nome string) *Grafo {
 }
 
 // AdicionarVertice inclui um vértice se ele ainda não existir
-// Item 9 - Responsável: João Marcelo
 func (g *Grafo) AdicionarVertice(id string) {
 	// Verifica se já existe
 	for _, v := range g.Vertices {
@@ -105,6 +104,23 @@ func (g *Grafo) RemoverAresta(origem, destino string) {
 			g.ListaAdj[destino] = novos
 		}
 	}
+}
+
+// Clone retorna uma cópia independente do grafo
+func (g *Grafo) Clone() *Grafo {
+	c := &Grafo{
+		NomeArquivo: g.NomeArquivo,
+		Direcionado: g.Direcionado,
+		Vertices:    make([]string, len(g.Vertices)),
+		ListaAdj:    make(map[string][]string, len(g.ListaAdj)),
+	}
+	copy(c.Vertices, g.Vertices)
+	for v, vizinhos := range g.ListaAdj {
+		cp := make([]string, len(vizinhos))
+		copy(cp, vizinhos)
+		c.ListaAdj[v] = cp
+	}
+	return c
 }
 
 // GetVizinhos retorna os vizinhos de um vértice

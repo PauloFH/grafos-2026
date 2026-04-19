@@ -14,8 +14,8 @@ type DFSResult struct {
 	Edges     []string
 }
 
-// Realiza a busca e retorna os tempos e os nomes das arestas
-func DFS(g *grafo.Grafo) *DFSResult {
+// DFSDigrafo realiza DFS para dígrafos e retorna tempos e tipos de arestas
+func DFSDigrafo(g *grafo.Grafo) *DFSResult {
 	res := &DFSResult{
 		Discovery: make(map[string]int),
 		Finish:    make(map[string]int),

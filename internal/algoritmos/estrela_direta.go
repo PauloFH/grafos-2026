@@ -10,7 +10,7 @@ import (
 // Cria a matriz a partir do grafo atual
 func MatrizIncidencia(g *grafo.Grafo) ([][]int, []string) {
 	numVertices := len(g.Vertices)
-	numArestas := g.NumArestas()
+	numArestas := TotalArestas(g)
 
 	// Inicializa a matriz linhas x colunas
 	matriz := make([][]int, numVertices)

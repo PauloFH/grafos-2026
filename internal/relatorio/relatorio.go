@@ -153,11 +153,37 @@ func FormataGraus(g *grafo.Grafo) string {
 	var sb strings.Builder
 	graus := g.GrausVertices()
 
+	if g.Direcionado {
+		grausEntrada := make(map[string]int, len(g.Vertices))
+		for _, origem := range g.Vertices {
+			for _, destino := range g.ListaAdj[origem] {
+				grausEntrada[destino]++
+			}
+		}
+
+		for _, v := range g.Vertices {
+			saida := graus[v]
+			entrada := grausEntrada[v]
+			fmt.Fprintf(&sb, "  %s: entrada=%s, saida=%s, total=%d\n",
+				v, formataGrauSinal(entrada, -1), formataGrauSinal(saida, +1), saida-entrada)
+		}
+		return sb.String()
+	}
+
 	for _, v := range g.Vertices {
 		fmt.Fprintf(&sb, "  %s: %d\n", v, graus[v])
 	}
+	return sb.String()
+}
 
-	return sb.String() // <--- Faltava esse return e a chave abaixo
+func formataGrauSinal(valor, sinal int) string {
+	if valor == 0 {
+		return "0"
+	}
+	if sinal > 0 {
+		return fmt.Sprintf("+%d", valor)
+	}
+	return fmt.Sprintf("-%d", valor)
 }
 
 // FormataConexo indica se o grafo é conexo

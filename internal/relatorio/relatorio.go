@@ -157,3 +157,36 @@ func FormataGraus(g *grafo.Grafo) string {
 
 	return sb.String()
 }
+
+func FormataOperacoesVertices(g *grafo.Grafo) string {
+	var sb strings.Builder
+
+	copia := grafo.NovoGrafo(g.Direcionado, g.NomeArquivo)
+
+	// Copia os vértices
+	for _, v := range g.Vertices {
+		copia.AdicionarVertice(v)
+	}
+
+	// Copia a lista de adjacência diretamente
+	for _, v := range g.Vertices {
+		copia.ListaAdj[v] = append([]string{}, g.ListaAdj[v]...)
+	}
+
+	sb.WriteString("Estado inicial:\n")
+	sb.WriteString(FormataLista(copia))
+
+	copia.AdicionarVertice("x")
+	sb.WriteString("\nApos adicionar 'x':\n")
+	sb.WriteString(FormataLista(copia))
+
+	if len(copia.Vertices) > 0 {
+		v := copia.Vertices[0]
+		copia.RemoverVertice(v)
+
+		sb.WriteString("\nApos remover '" + v + "':\n")
+		sb.WriteString(FormataLista(copia))
+	}
+
+	return sb.String()
+}

@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/PauloFH/grafos-2026/internal/algoritmos"
+	"github.com/PauloFH/grafos-2026/internal/conversoes"
 	"github.com/PauloFH/grafos-2026/internal/leitor"
 	"github.com/PauloFH/grafos-2026/internal/relatorio"
 )
@@ -34,7 +35,7 @@ func main() {
 			tipo = "DIGRAFO"
 		}
 		fmt.Printf("[%s] %s - %d vertices, %d arestas\n",
-			tipo, nome, g.NumVertices(), g.NumArestas())
+			tipo, nome, algoritmos.TotalVertices(g), algoritmos.TotalArestas(g))
 
 		r := relatorio.Novo(nome)
 
@@ -57,11 +58,45 @@ func main() {
 		r.Adiciona("VERTICES", relatorio.FormataVertices(g))
 		r.Adiciona("ARESTAS", relatorio.FormataArestas(g))
 		r.Adiciona("LISTA_DE_ADJACENCIA", relatorio.FormataLista(g))
+		m := conversoes.ListaParaMatriz(g)
+		r.Adiciona("MATRIZ_DE_ADJACENCIA", relatorio.FormataMatriz(g, m))
+		conversoes.MatrizParaLista(g, m)
+		r.Adiciona("LISTA_RECONVERTIDA_DA_MATRIZ", relatorio.FormataLista(g))
+		r.Adiciona("SAO_ADJACENTES", relatorio.FormataAdjacentes(g))
+		r.Adiciona("CONEXO", relatorio.FormataConexo(g))
+		r.Adiciona("CONTAGEM", relatorio.FormataContagem(g))
+		mi, arestas := conversoes.MatrizIncidencia(g)
+		r.Adiciona("MATRIZ_DE_INCIDENCIA", relatorio.FormataMatrizIncidencia(g, mi, arestas))
+
+		if nome == "GRAFO_1" || nome == "GRAFO_3" {
+			inicio := g.Vertices[0]
+
+			resBFS := algoritmos.BFS(g, inicio)
+			r.Adiciona("BFS", relatorio.FormataBFS(resBFS, inicio))
+			if err := relatorio.GerarPNGBFS(g, resBFS, inicio, nome+"_BFS", saidas); err != nil {
+				fmt.Println("Aviso: erro ao gerar PNG BFS para", nome, ":", err)
+			}
+
+			resDFS := algoritmos.DFS(g, inicio)
+			r.Adiciona("DFS", relatorio.FormataDFS(resDFS, inicio))
+			if err := relatorio.GerarPNGDFS(g, resDFS, inicio, nome+"_DFS", saidas); err != nil {
+				fmt.Println("Aviso: erro ao gerar PNG DFS para", nome, ":", err)
+			}
+		}
+
+		if nome == "GRAFO_3" {
+			r.Adiciona("ARTICULACOES_E_BLOCOS", relatorio.FormataBiconectividade(g))
+		}
+
+		if nome == "GRAFO_1" || nome == "GRAFO_2" {
+			r.Adiciona("BIPARTIDO", relatorio.FormataBipartido(g))
+		}
 
 		// -------------------------------------------------------
 		// Veja o README para saber como fazer a adição de seções.
 		// -------------------------------------------------------
 		r.Salva(saidas)
+		r.SalvaPNG(saidas, g)
 	}
 
 	fmt.Println("Concluido. Saidas em:", saidas)

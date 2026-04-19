@@ -40,7 +40,6 @@ func (g *Grafo) AdicionarVertice(id string) {
 }
 
 // RemoverVertice exclui um vértice e suas conexões
-// Item 10 - Responsável: João Marcelo
 func (g *Grafo) RemoverVertice(id string) {
 	// Remove das listas dos outros vértices
 	for v, vizinhos := range g.ListaAdj {
@@ -106,40 +105,6 @@ func (g *Grafo) RemoverAresta(origem, destino string) {
 			g.ListaAdj[destino] = novos
 		}
 	}
-}
-
-// NumVertices retorna o total de vértices
-// Item 7 - Responsável: Vinicius
-func (g *Grafo) NumVertices() int {
-	return len(g.Vertices)
-}
-
-// NumArestas retorna o total de arestas
-// Item 8 - Responsável: Vinicius
-func (g *Grafo) NumArestas() int {
-	total := 0
-	for _, vizinhos := range g.ListaAdj {
-		total += len(vizinhos)
-	}
-	if !g.Direcionado {
-		total /= 2
-	}
-	return total
-}
-
-// SaoAdjacentes verifica se dois vértices são vizinhos
-// Item 6 - Responsável: Paulo Roberto
-func (g *Grafo) SaoAdjacentes(a, b string) bool {
-	vizinhos, ok := g.ListaAdj[a]
-	if !ok {
-		return false
-	}
-	for _, v := range vizinhos {
-		if v == b {
-			return true
-		}
-	}
-	return false
 }
 
 // GetVizinhos retorna os vizinhos de um vértice

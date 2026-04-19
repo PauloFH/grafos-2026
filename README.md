@@ -18,50 +18,49 @@ go build -o projeto ./cmd/main.go
 ./projeto
 ```
 
+As saídas são geradas em `outputs/`.
+
 ## Como cada membro adiciona sua parte
 
 ### Passo 1 — Implemente a função
 
-Abra o arquivo em `internal/conversoes/` ou `internal/algoritmos/` correspondente ao seu item.
+Abra o arquivo em `internal/conversoes/` ou `internal/algoritmos/` correspondente ao seu item e preencha a lógica.
 
-Exemplo: `conversoes/lista_para_matriz.go`
+### Passo 2 — Adicione a formatação ao relatório
 
-```go
-func ListaParaMatriz(g *grafo.Grafo) string {
- TODO: Fazer a conversao
+Se a saída precisa de um texto formatado, adicione uma função `Formata<Algo>(g)` em `internal/relatorio/relatorio.go`.
 
-}
-```
+### Passo 3 — Chame no main
 
-### Passo 2 — Adicione ao relatório
-
-No `cmd/main.go`, depois das linhas que já existem:
+No `cmd/main.go`, adicione a linha de relatório. Se sua função depender de uma conversão prévia, chame-a antes:
 
 ```go
-matriz := conversoes.ListaParaMatriz(g)
-r.Adiciona("MATRIZ_DE_ADJACENCIA", matriz)
+conversoes.ListaParaMatriz(g)
+r.Adiciona("MATRIZ_DE_ADJACENCIA", relatorio.FormataMatriz(g))
 ```
 
-### Passo 3 — Rode e verifique a saída
+### Passo 4 — Rode e verifique
 
 ```
-./projeto
-cat outputs/GRAFO_1.txt
+go run ./cmd/main.go
+cat outputs/GRAFO_0.txt
 ```
+---
 
 ## Estrutura do Grafo
 
-O grafo é simples, em lista de adjacência:
-
 ```go
 type Grafo struct {
-    Vertices    []string            // lista na ordem
+    NomeArquivo string
+    Direcionado bool
+    Vertices    []string            // vértices na ordem de leitura
     ListaAdj    map[string][]string // vértice -> vizinhos
-    Direcionado bool                // true = digrafo
 }
 ```
 
-### Funções já prontas no grafo:
+---
+
+## Funções do grafo:
 
 | Função | O que faz |
 |---|---|
@@ -71,6 +70,5 @@ type Grafo struct {
 | `g.RemoverAresta(a, b)` | remove conexão |
 | `g.NumVertices()` | total de vértices |
 | `g.NumArestas()` | total de arestas |
-| `g.SaoAdjacentes(a, b)` | verifica se são vizinhos |
 | `g.GetVizinhos(id)` | retorna vizinhos de um vértice |
 

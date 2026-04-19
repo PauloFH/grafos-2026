@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/PauloFH/grafos-2026/internal/algoritmos"
 	"github.com/PauloFH/grafos-2026/internal/leitor"
 	"github.com/PauloFH/grafos-2026/internal/relatorio"
 )
@@ -37,6 +38,28 @@ func main() {
 
 		r := relatorio.Novo(nome)
 
+		if g.Direcionado { //Se for digrafo, gera o grafo subjacente
+			subjacente := algoritmos.DeterminaGrafoSubjacente(g)
+
+			r.Adiciona("GRAFO_SUBJACENTE", relatorio.FormataLista(subjacente))
+		}
+
+		if g.Direcionado {
+			resultadoDFS := algoritmos.DFS(g)
+			txtTempos, txtArestas := algoritmos.FormatarDFS(g, resultadoDFS)
+
+			r.Adiciona("DFS_TEMPOS_ENTRADA_SAIDA", txtTempos)
+			r.Adiciona("DFS_CLASSIFICACAO_ARESTAS", txtArestas)
+		}
+
+		if g.Direcionado {
+			matriz, vertices := algoritmos.MatrizIncidencia(g)
+			vetorA, vetorIP := algoritmos.EstrelaDireta(matriz, vertices)
+			txtEstrela := algoritmos.FormatarEstrelaDireta(vetorA, vetorIP, vertices)
+
+			r.Adiciona("ESTRELA_DIRETA", txtEstrela)
+		}
+
 		// Dados básicos
 		r.Adiciona("VERTICES", relatorio.FormataVertices(g))
 		r.Adiciona("ARESTAS", relatorio.FormataArestas(g))
@@ -49,4 +72,5 @@ func main() {
 	}
 
 	fmt.Println("Concluido. Saidas em:", saidas)
+
 }

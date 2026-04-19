@@ -1,0 +1,57 @@
+==============================================
+RELATORIO: DIGRAFO_0
+==============================================
+
+--- GRAFO_SUBJACENTE ---
+c -> a, f, b
+a -> c, b, d
+f -> c, e, g
+g -> h, f
+h -> g
+b -> a, c, e
+d -> a, e
+e -> b, f, d
+
+--- DFS_TEMPOS_ENTRADA_SAIDA ---
+  a: [1, 16]
+  b: [2, 13]
+  d: [14, 15]
+  c: [3, 10]
+  e: [11, 12]
+  f: [4, 9]
+  g: [5, 8]
+  h: [6, 7]
+
+--- DFS_CLASSIFICACAO_ARESTAS ---
+  (a, b): Árvore
+  (b, c): Árvore
+  (c, a): Retorno
+  (c, f): Árvore
+  (f, g): Árvore
+  (g, h): Árvore
+  (b, e): Árvore
+  (e, f): Cruzamento
+  (a, d): Árvore
+  (d, e): Cruzamento
+
+--- ESTRELA_DIRETA ---
+  Vetor A (Sucessores): [b, d, c, e, e, a, f, f, g, h]
+  Vetor IP (Ponteiros): [0, 2, 4, 5, 7, 8, 9, 10, 10]
+
+--- VERTICES ---
+  Total de vertices: 8
+  Vertices: a, b, d, c, e, f, g, h
+
+--- ARESTAS ---
+  Total de arestas: 10
+
+--- LISTA_DE_ADJACENCIA ---
+a -> b, d
+b -> c, e
+d -> e
+c -> a, f
+e -> f
+f -> g
+g -> h
+h -> (vazio)
+

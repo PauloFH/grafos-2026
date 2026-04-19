@@ -1,0 +1,21 @@
+==============================================
+RELATORIO: GRAFO_0
+==============================================
+
+--- VERTICES ---
+  Total de vertices: 8
+  Vertices: a, b, c, d, e, f, g, h
+
+--- ARESTAS ---
+  Total de arestas: 9
+
+--- LISTA_DE_ADJACENCIA ---
+a -> b
+b -> a, c, d
+c -> b, d, e
+d -> b, c
+e -> c, f
+f -> e, g, h
+g -> f, h
+h -> f, g
+

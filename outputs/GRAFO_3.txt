@@ -1,0 +1,30 @@
+==============================================
+RELATORIO: GRAFO_3
+==============================================
+
+--- VERTICES ---
+  Total de vertices: 17
+  Vertices: a, b, c, e, f, d, g, q, j, h, i, l, m, k, o, n, p
+
+--- ARESTAS ---
+  Total de arestas: 24
+
+--- LISTA_DE_ADJACENCIA ---
+a -> b, c, e, f
+b -> a
+c -> a, d
+e -> a, f
+f -> a, d, e, g
+d -> c, f, g, q
+g -> d, f, j
+q -> d, n, p
+j -> g, i, k
+h -> i, l, m
+i -> h, j, k
+l -> h, k, m
+m -> h, l, o
+k -> i, j, l
+o -> m, n
+n -> o, p, q
+p -> n, q
+

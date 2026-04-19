@@ -38,25 +38,18 @@ func main() {
 
 		r := relatorio.Novo(nome)
 
-		if g.Direcionado { //Se for digrafo, gera o grafo subjacente
+		if g.Direcionado { //Se for digrafo, gera o grafo subjacente e analises especificas
 			subjacente := algoritmos.DeterminaGrafoSubjacente(g)
-
 			r.Adiciona("GRAFO_SUBJACENTE", relatorio.FormataLista(subjacente))
-		}
 
-		if g.Direcionado {
 			resultadoDFS := algoritmos.DFS(g)
 			txtTempos, txtArestas := algoritmos.FormatarDFS(g, resultadoDFS)
-
 			r.Adiciona("DFS_TEMPOS_ENTRADA_SAIDA", txtTempos)
 			r.Adiciona("DFS_CLASSIFICACAO_ARESTAS", txtArestas)
-		}
 
-		if g.Direcionado {
 			matriz, vertices := algoritmos.MatrizIncidencia(g)
 			vetorA, vetorIP := algoritmos.EstrelaDireta(matriz, vertices)
 			txtEstrela := algoritmos.FormatarEstrelaDireta(vetorA, vetorIP, vertices)
-
 			r.Adiciona("ESTRELA_DIRETA", txtEstrela)
 		}
 

@@ -96,15 +96,15 @@ func FormataLista(g *grafo.Grafo) string {
 // FormataVertices gera info básica dos vértices
 func FormataVertices(g *grafo.Grafo) string {
 	return fmt.Sprintf("  Total de vertices: %d\n  Vertices: %s\n",
-		g.NumVertices(), strings.Join(g.Vertices, ", "))
+		algoritmos.TotalVertices(g), strings.Join(g.Vertices, ", "))
 }
 
 // FormataArestas gera info básica das arestas
 func FormataArestas(g *grafo.Grafo) string {
-	return fmt.Sprintf("  Total de arestas: %d\n", g.NumArestas())
+	return fmt.Sprintf("  Total de arestas: %d\n", algoritmos.TotalArestas(g))
 }
 
-const errMatrizInvalida = "(matriz com dimensoes invalidas)\n"
+const errMatrizInvalida = "  (matriz com dimensoes invalidas)\n"
 
 // FormataMatriz gera o texto da matriz de adjacência
 func FormataMatriz(g *grafo.Grafo, m [][]int) string {

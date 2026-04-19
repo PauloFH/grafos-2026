@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/PauloFH/grafos-2026/internal/algoritmos"
 	"github.com/PauloFH/grafos-2026/internal/conversoes"
 	"github.com/PauloFH/grafos-2026/internal/leitor"
 	"github.com/PauloFH/grafos-2026/internal/relatorio"
@@ -34,7 +35,7 @@ func main() {
 			tipo = "DIGRAFO"
 		}
 		fmt.Printf("[%s] %s - %d vertices, %d arestas\n",
-			tipo, nome, g.NumVertices(), g.NumArestas())
+			tipo, nome, algoritmos.TotalVertices(g), algoritmos.TotalArestas(g))
 
 		r := relatorio.Novo(nome)
 

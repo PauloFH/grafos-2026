@@ -50,6 +50,15 @@ func MatrizIncidencia(g *grafo.Grafo) ([][]int, [][2]string) {
 	for j, aresta := range arestas {
 		i := idx[aresta[0]]
 		k := idx[aresta[1]]
+		if i == k {
+			// Laço: convenção — marca 2 no vértice (não-direcionado) ou +1 (direcionado)
+			if g.Direcionado {
+				matriz[i][j] = +1
+			} else {
+				matriz[i][j] = 2
+			}
+			continue
+		}
 		if g.Direcionado {
 			matriz[i][j] = +1
 			matriz[k][j] = -1

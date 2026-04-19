@@ -107,23 +107,6 @@ func (g *Grafo) RemoverAresta(origem, destino string) {
 	}
 }
 
-// NumVertices retorna o total de vértices
-func (g *Grafo) NumVertices() int {
-	return len(g.Vertices)
-}
-
-// NumArestas retorna o total de arestas
-func (g *Grafo) NumArestas() int {
-	total := 0
-	for _, vizinhos := range g.ListaAdj {
-		total += len(vizinhos)
-	}
-	if !g.Direcionado {
-		total /= 2
-	}
-	return total
-}
-
 // GetVizinhos retorna os vizinhos de um vértice
 func (g *Grafo) GetVizinhos(id string) []string {
 	return g.ListaAdj[id]

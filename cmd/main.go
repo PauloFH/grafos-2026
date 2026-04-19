@@ -52,6 +52,30 @@ func main() {
 		mi, arestas := conversoes.MatrizIncidencia(g)
 		r.Adiciona("MATRIZ_DE_INCIDENCIA", relatorio.FormataMatrizIncidencia(g, mi, arestas))
 
+		if nome == "GRAFO_1" || nome == "GRAFO_3" {
+			inicio := g.Vertices[0]
+
+			resBFS := algoritmos.BFS(g, inicio)
+			r.Adiciona("BFS", relatorio.FormataBFS(resBFS, inicio))
+			if err := relatorio.GerarPNGBFS(g, resBFS, inicio, nome+"_BFS", saidas); err != nil {
+				fmt.Println("Aviso: erro ao gerar PNG BFS para", nome, ":", err)
+			}
+
+			resDFS := algoritmos.DFS(g, inicio)
+			r.Adiciona("DFS", relatorio.FormataDFS(resDFS, inicio))
+			if err := relatorio.GerarPNGDFS(g, resDFS, inicio, nome+"_DFS", saidas); err != nil {
+				fmt.Println("Aviso: erro ao gerar PNG DFS para", nome, ":", err)
+			}
+		}
+
+		if nome == "GRAFO_3" {
+			r.Adiciona("ARTICULACOES_E_BLOCOS", relatorio.FormataBiconectividade(g))
+		}
+
+		if nome == "GRAFO_1" || nome == "GRAFO_2" {
+			r.Adiciona("BIPARTIDO", relatorio.FormataBipartido(g))
+		}
+
 		// -------------------------------------------------------
 		// Veja o README para saber como fazer a adição de seções.
 		// -------------------------------------------------------

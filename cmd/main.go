@@ -62,6 +62,7 @@ func processarGrafo(g *grafo.Grafo, r *relatorio.Relatorio, nome, saidas string)
 		r.Adiciona("BIPARTIDO", relatorio.FormataBipartido(g))
 	}
 	if nome == "GRAFO_1" {
+		r.Adiciona("OPERACOES_SOBRE_VERTICES", relatorio.FormataOperacoesVertices(g))
 		gerarPNGsModificacao(g, nome, saidas)
 	}
 }
@@ -107,7 +108,6 @@ func adicionarDadosBasicos(g *grafo.Grafo, r *relatorio.Relatorio) {
 	r.Adiciona("LISTA_RECONVERTIDA_DA_MATRIZ", relatorio.FormataLista(g))
 	r.Adiciona("SAO_ADJACENTES", relatorio.FormataAdjacentes(g))
 	r.Adiciona("GRAU_DOS_VERTICES", relatorio.FormataGraus(g))
-	r.Adiciona("OPERACOES_SOBRE_VERTICES", relatorio.FormataOperacoesVertices(g))
 	r.Adiciona("CONEXO", relatorio.FormataConexo(g))
 	r.Adiciona("CONTAGEM", relatorio.FormataContagem(g))
 	mi, arestas := conversoes.MatrizIncidencia(g)
@@ -135,13 +135,14 @@ func gerarPNGsModificacao(g *grafo.Grafo, nome, saidas string) {
 
 	gAdd := g.Clone()
 	gAdd.AdicionarVertice("x")
+	gAdd.AdicionarAresta(gAdd.Vertices[0], "x")
 	if err := gen.Gera(gAdd, nome+"_ADD_VERTEX", saidas); err != nil {
 		fmt.Println("Aviso: erro ao gerar PNG add vertex:", err)
 	}
 
-	gRem := g.Clone()
-	if len(gRem.Vertices) > 0 {
-		gRem.RemoverVertice(gRem.Vertices[0])
+	gRem := gAdd.Clone()
+	if len(g.Vertices) > 0 {
+		gRem.RemoverVertice(g.Vertices[0])
 	}
 	if err := gen.Gera(gRem, nome+"_REMOVE_VERTEX", saidas); err != nil {
 		fmt.Println("Aviso: erro ao gerar PNG remove vertex:", err)

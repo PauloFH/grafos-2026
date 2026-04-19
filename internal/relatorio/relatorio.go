@@ -246,29 +246,21 @@ func FormataMatrizIncidencia(g *grafo.Grafo, m [][]int, arestas [][2]string) str
 func FormataOperacoesVertices(g *grafo.Grafo) string {
 	var sb strings.Builder
 
-	copia := grafo.NovoGrafo(g.Direcionado, g.NomeArquivo)
-
-	// Copia os vértices
-	for _, v := range g.Vertices {
-		copia.AdicionarVertice(v)
-	}
-
-	// Copia a lista de adjacência diretamente
-	for _, v := range g.Vertices {
-		copia.ListaAdj[v] = append([]string{}, g.ListaAdj[v]...)
-	}
+	copia := g.Clone()
 
 	sb.WriteString("Estado inicial:\n")
 	sb.WriteString(FormataLista(copia))
 
 	copia.AdicionarVertice("x")
+	if len(copia.Vertices) > 0 {
+		copia.AdicionarAresta(copia.Vertices[0], "x")
+	}
 	sb.WriteString("\nApos adicionar 'x':\n")
 	sb.WriteString(FormataLista(copia))
 
-	if len(copia.Vertices) > 0 {
-		v := copia.Vertices[0]
+	if len(g.Vertices) > 0 {
+		v := g.Vertices[0]
 		copia.RemoverVertice(v)
-
 		sb.WriteString("\nApos remover '" + v + "':\n")
 		sb.WriteString(FormataLista(copia))
 	}

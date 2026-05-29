@@ -1,0 +1,11 @@
+==============================================
+RELATORIO: GRAFO_EULER
+==============================================
+
+--- EULERIANIDADE ---
+  Classificacao: Nao-euleriano
+  Conexo: false
+
+--- TRILHA_EULERIANA ---
+  Grafo nao-euleriano: nao ha trilha a extrair.
+

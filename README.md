@@ -1,17 +1,29 @@
 # Trabalho de Grafos - 2026
 
+Projeto da disciplina **DIM0549 Grafos** (UFRN). O repositório reúne as duas unidades,
+compartilhando o mesmo núcleo em `internal/`:
+
+- **Unidade 1** — representações, conversões e algoritmos clássicos sobre grafos/dígrafos.
+- **Unidade 2** — **Projeto 3: Grafos Eulerianos** (validação de eulerianidade + Hierholzer).
+
 ## Estrutura do projeto
 
 ```
-cmd/main.go                      → ponto de entrada
-internal/grafo/grafo.go          → estrutura e métodos do grafo
-internal/algoritmos/             → implementações de algoritmos
-internal/conversoes/             → conversões entre representações
-internal/leitor/leitor.go        → lê os arquivos de inputs/
-internal/relatorio/relatorio.go  → gera saída padronizada em texto
-internal/relatorio/png.go        → geração de imagens PNG (Graphviz)
-inputs/                          → arquivos de entrada (.txt por grafo)
-outputs/                         → relatórios e imagens gerados
+cmd/
+  unidade1/main.go                 → ponto de entrada da Unidade 1
+  unidade2/main.go                 → ponto de entrada da Unidade 2 (eulerianos)
+
+internal/                          → NÚCLEO COMPARTILHADO pelas duas unidades
+  grafo/grafo.go                   → estrutura e métodos do grafo
+  leitor/leitor.go                 → lê os arquivos de inputs/
+  algoritmos/                      → BFS, DFS, conexo, contagem, pilha, etc.
+  conversoes/                      → conversões entre representações
+  relatorio/relatorio.go           → relatório textual padronizado
+  relatorio/png*.go                → geração de imagens PNG (Graphviz)
+  euleriano/                       → Unidade 2: eulerianidade + Hierholzer
+
+inputs/      outputs/              → entradas/saídas da Unidade 1
+inputs_u2/   outputs_u2/           → entradas/saídas da Unidade 2
 ```
 
 ---
@@ -21,63 +33,110 @@ outputs/                         → relatórios e imagens gerados
 ### Pré-requisitos
 
 - [Go 1.26+](https://go.dev/dl/)
-- [Graphviz](https://graphviz.org/download/) (para geração de PNGs)
+- [Graphviz](https://graphviz.org/download/) (apenas para gerar os PNGs)
+  - Arch/CachyOS: `sudo pacman -S graphviz`
+  - Sem o Graphviz o programa roda normal e só pula a geração de imagens.
 
-### Compilar e executar
+### Com o Makefile (recomendado)
 
 ```bash
-# Executar direto (sem compilar)
-go run ./cmd/main.go
+make           # lista os alvos disponíveis
+make u1        # roda a Unidade 1            -> outputs/
+make u2        # roda a Unidade 2 (eulerianos) -> outputs_u2/
+make run       # roda as duas em sequência
+make build     # compila as duas em bin/
+make check     # go build ./... + go vet ./... (antes de commitar)
+make fmt       # gofmt em todo o código
+make clean     # remove binários e .dot gerados
+```
 
-# Compilar e executar o binário
-go build -o projeto_grafos_unidade_1 ./cmd/main.go
-./projeto_grafos_unidade_1
+### Sem o Makefile (go puro)
+
+> Rode **sempre a partir da raiz** do repositório — os caminhos `inputs*/`/`outputs*/`
+> são relativos ao diretório atual.
+
+```bash
+# Unidade 1
+go run ./cmd/unidade1
+go build -o bin/unidade1 ./cmd/unidade1 && ./bin/unidade1
+
+# Unidade 2 (eulerianos)
+go run ./cmd/unidade2
+go build -o bin/unidade2 ./cmd/unidade2 && ./bin/unidade2
 ```
 
 ### Verificar saídas
 
 ```bash
 cat outputs/GRAFO_1.txt
-cat outputs/DIGRAFO_DO_GRUPO.txt
+cat outputs_u2/GRAFO_EULER.txt
 ```
-
-Os arquivos gerados em `outputs/` são:
-- `<NOME>.txt` — relatório textual completo
-- `<NOME>.png` — visualização do grafo
-- `<NOME>_BFS.png` — árvore BFS (GRAFO_1, GRAFO_3, DIGRAFO_DO_GRUPO)
-- `<NOME>_DFS.png` — árvore DFS (GRAFO_1, GRAFO_3, DIGRAFO_DO_GRUPO)
-- `GRAFO_1_ADD_VERTEX.png` — grafo após inclusão de vértice
-- `GRAFO_1_REMOVE_VERTEX.png` — grafo após exclusão de vértice
 
 ---
 
-## Como cada membro adiciona sua parte
+## Formato dos arquivos de entrada
 
-### Passo 1 — Implemente a função
+Cada grafo é um `.txt` em `inputs/` (Unidade 1) ou `inputs_u2/` (Unidade 2):
 
-Crie ou edite um arquivo em `internal/algoritmos/` ou `internal/conversoes/`.
-
-### Passo 2 — Adicione a formatação ao relatório
-
-Se a saída precisa de texto formatado, adicione `Formata<Algo>(g)` em `internal/relatorio/relatorio.go` ou `formata_algoritmos.go`.
-
-### Passo 3 — Chame no main
-
-Em `cmd/main.go`, adicione dentro da função correspondente (`adicionarDadosBasicos`, `processarDigrafo`, etc.):
-
-```go
-r.Adiciona("TITULO_DA_SECAO", relatorio.FormataAlgo(g))
+```
+20            # 1ª linha: número de vértices (informativo)
+1,2           # demais linhas: origem,destino
+1,5
+2,3
+...
 ```
 
-### Passo 4 — Rode e verifique
+O tipo é decidido pelo **nome do arquivo**: se contém `DIGRAFO`, é tratado como dígrafo
+(arestas direcionadas); caso contrário, como grafo não-direcionado.
+
+---
+
+# Unidade 2 — Projeto 3: Grafos Eulerianos
+
+Cenário: roteamento de coleta de resíduos que precisa percorrer **todas as ruas exatamente
+uma vez** (trilha/circuito euleriano). O software deve:
+
+1. **Validar a eulerianidade** do grafo e do dígrafo.
+2. **Algoritmo de Hierholzer (grafos)** — extrair a cadeia euleriana (arestas bidirecionais).
+3. **Algoritmo de Hierholzer (dígrafos)** — mesma extração com arestas direcionadas.
+
+### Como rodar
 
 ```bash
-go run ./cmd/main.go
-cat outputs/GRAFO_1.txt
+make u2          # ou: go run ./cmd/unidade2
+cat outputs_u2/GRAFO_EULER.txt
 ```
+
+Saídas em `outputs_u2/`:
+- `<NOME>.txt` — relatório com as seções `EULERIANIDADE` e `TRILHA_EULERIANA`
+- `<NOME>.png` — visualização do grafo
+- `<NOME>_TRILHA.png` — trilha euleriana com as arestas numeradas na ordem de percurso
+
+### Arquitetura (pacote `internal/euleriano`)
+
+Contrato compartilhado (em `eulerianidade.go`) que liga validação ↔ Hierholzer ↔ relatório:
+
+| Tipo / Função | Papel |
+|---|---|
+| `ResultadoEuler` | classe (não/semi/euleriano), conectividade, graus ímpares, vértice inicial |
+| `TrilhaEuler` | sequência ordenada de vértices + se é circuito |
+| `Classifica(g)` | aplica os critérios de eulerianidade (grafo ou dígrafo) |
+| `HierholzerGrafo(g, inicio)` | cadeia euleriana de grafo não-direcionado |
+| `HierholzerDigrafo(g, inicio)` | cadeia euleriana de dígrafo |
+
+Reuso do núcleo: `grafo.Clone/RemoverAresta`, `leitor`, `algoritmos.EhConexo/BFS/Pilha`,
+`relatorio.Relatorio/GeradorPNG`.
+
+### Divisão de tarefas (Unidade 2)
+
+| Responsável | Tarefa | Arquivo |
+|---|---|---|
+
 ---
 
-## Estrutura do Grafo
+# Unidade 1
+
+### Estrutura do Grafo
 
 ```go
 type Grafo struct {
@@ -109,7 +168,7 @@ type Grafo struct {
 | `algoritmos.TotalArestas(g)` | número de arestas |
 | `algoritmos.SaoAdjacentes(g, a, b)` | verifica adjacência entre dois vértices |
 | `algoritmos.ParesAdjacentes(g)` | lista todos os pares adjacentes |
-| `algoritmos.EhConexo(g)` | conectividade  |
+| `algoritmos.EhConexo(g)` | conectividade |
 | `algoritmos.BFS(g, inicio)` | busca em largura |
 | `algoritmos.DFS(g, inicio)` | busca em profundidade (não-direcionado) |
 | `algoritmos.DFSDigrafo(g)` | DFS com classificação de arestas (dígrafo) |
@@ -118,9 +177,7 @@ type Grafo struct {
 | `algoritmos.DeterminaGrafoSubjacente(g)` | grafo subjacente de um dígrafo |
 | `algoritmos.EstrelaDireta(matriz, vertices)` | converte para estrela direta |
 
----
-
-## Divisão de tarefas
+### Divisão de tarefas (Unidade 1)
 
 | # | Descrição | Grafos | Responsável |
 |---|---|---|---|

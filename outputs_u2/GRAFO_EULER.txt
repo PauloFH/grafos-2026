@@ -3,10 +3,12 @@ RELATORIO: GRAFO_EULER
 ==============================================
 
 --- EULERIANIDADE ---
-  Classificacao: Nao-euleriano
+  Classificacao: Euleriano (possui circuito euleriano)
   Conexo: true
-  Vertices de grau impar: 1, 5, 4, 9, 10, 13, 14, 15, 19, 20
+  Vertice inicial sugerido: 1
 
 --- TRILHA_EULERIANA ---
-  Grafo nao-euleriano: nao ha trilha a extrair.
+  Tipo: Circuito euleriano
+  Arestas percorridas: 53
+  Sequencia: 1 -> 2 -> 3 -> 4 -> 5 -> 1 -> 20 -> 15 -> 11 -> 7 -> 2 -> 6 -> 5 -> 16 -> 12 -> 7 -> 3 -> 8 -> 4 -> 9 -> 8 -> 7 -> 6 -> 10 -> 9 -> 13 -> 8 -> 12 -> 11 -> 16 -> 15 -> 14 -> 9 -> 5 -> 10 -> 14 -> 13 -> 12 -> 17 -> 16 -> 20 -> 18 -> 13 -> 10 -> 15 -> 19 -> 14 -> 20 -> 19 -> 17 -> 18 -> 19 -> 4 -> 1
 

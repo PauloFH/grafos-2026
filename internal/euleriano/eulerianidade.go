@@ -48,21 +48,16 @@ type TrilhaEuler struct {
 	Circuito  bool
 }
 
-// Classifica decide os criterios de eulerianidade (grafo se !Direcionado,
-// digrafo caso contrario).
-//
-// TODO: implementar os criterios.
-//   - Grafo: conexo (ignorando isolados) + nº de vertices de grau impar:
-//     0 => CircuitoEuleriano (inicio = g.Vertices[0]);
-//     2 => CaminhoEuleriano (inicio = um dos impares);
-//     senao => NaoEuleriano.
-//   - Digrafo: fracamente conexo + para todo v entrada==saida => Circuito;
-//     exatamente um v com saida-entrada=+1 (inicio) e um com +1 de entrada (fim)
-//     => Caminho; senao => NaoEuleriano.
-//     Reusar algoritmos.EhConexo / algoritmos.BFS e o calculo de grau de
-//     entrada que ja existe em relatorio.FormataGraus.
-
 func Classifica(g *grafo.Grafo) ResultadoEuler {
+
+	if len(g.Vertices) == 0 {
+		return ResultadoEuler{
+			Classe:         CircuitoEuleriano,
+			Conexo:         true,
+			GrausImpares:   []string{},
+			Desbalanceados: map[string]int{},
+		}
+	}
 
 	if g.Direcionado {
 		return classificaDigrafo(g)
@@ -192,7 +187,7 @@ func classificaDigrafo(g *grafo.Grafo) ResultadoEuler {
 
 	// Caminho Euleriano:
 	// um vértice com +1 e um vértice com -1
-	if inicioCount == 1 && fimCount == 1 {
+	if inicioCount == 1 && fimCount == 1 && len(desbalanceados) == 2 {
 		return ResultadoEuler{
 			Classe:         CaminhoEuleriano,
 			Conexo:         true,

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EcoUrbano · Roteirização de Coleta (Grafos Eulerianos)</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>♻️</text></svg>"
+    />
+  </head>
+  <body class="mostrar-numeros">
+    <header class="topo">
+      <div class="topo-marca">
+        <span class="topo-icone">♻️</span>
+        <div>
+          <h1>EcoUrbano</h1>
+          <p>Otimização de rotas de coleta · <strong>Projeto 3 — Grafos Eulerianos</strong></p>
+        </div>
+      </div>
+      <p class="topo-dica">
+        O caminhão parte da central e percorre <strong>cada rua exatamente uma vez</strong> (trilha de
+        Hierholzer), voltando ao depósito.
+      </p>
+    </header>
+
+    <main class="layout">
+      <!-- ----------- PAINEL LATERAL ----------- -->
+      <aside class="painel">
+        <section class="bloco">
+          <h2>Tipo de malha</h2>
+          <div id="modos" class="modos"></div>
+        </section>
+
+        <section class="bloco">
+          <h2>Central de coleta</h2>
+          <select id="inicio" class="select"></select>
+          <p class="ajuda">Escolha o ponto de partida — ou <strong>clique num cruzamento</strong> no mapa.</p>
+        </section>
+
+        <section class="bloco">
+          <h2>Controles</h2>
+          <div class="botoes">
+            <button id="btn-play" class="btn primario">▶&nbsp; Coletar</button>
+            <button id="btn-reset" class="btn">↺ Reiniciar</button>
+          </div>
+          <div class="botoes">
+            <button id="btn-passo-tras" class="btn pequeno">⏮ Rua</button>
+            <button id="btn-passo-frente" class="btn pequeno">Rua ⏭</button>
+          </div>
+
+          <label class="campo">
+            <span>Velocidade <em id="velocidade-val">1.50×</em></span>
+            <input id="velocidade" type="range" min="0.25" max="6" step="0.25" value="1.5" />
+          </label>
+
+          <label class="campo">
+            <span>Progresso da rota</span>
+            <input id="scrubber" type="range" min="0" max="0" step="1" value="0" />
+          </label>
+
+          <label class="check">
+            <input id="toggle-numeros" type="checkbox" checked />
+            <span>Numerar as ruas na ordem de coleta</span>
+          </label>
+        </section>
+
+        <section class="bloco card-euler">
+          <h2>Eulerianidade</h2>
+          <div class="euler-linha">
+            <span id="euler-badge" class="badge">—</span>
+            <span id="euler-texto" class="euler-texto"></span>
+          </div>
+          <p id="euler-explica" class="euler-explica"></p>
+          <ul class="euler-dados">
+            <li><span class="rotulo">Conexo:</span> <span id="euler-conexo">—</span></li>
+            <li><span class="rotulo">Início sugerido:</span> <span id="euler-inicio">—</span></li>
+          </ul>
+          <p id="euler-detalhe" class="euler-detalhe"></p>
+        </section>
+
+        <section class="bloco card-prog">
+          <h2>Progresso da coleta</h2>
+          <div class="prog-topo">
+            <span><strong id="prog-ruas">0 / 0</strong> ruas</span>
+            <span id="prog-percent" class="prog-pct">0%</span>
+          </div>
+          <div class="barra"><div id="prog-barra" class="barra-fill"></div></div>
+          <ul class="prog-dados">
+            <li><span class="rotulo">Rua atual:</span> <span id="prog-atual">—</span></li>
+            <li><span class="rotulo">Tipo:</span> <span id="prog-tipo">—</span></li>
+          </ul>
+
+          <div class="gauges">
+            <div class="gauge">
+              <span class="gauge-num" id="gauge-diesel">0.0 L</span>
+              <span class="gauge-rotulo">diesel economizado</span>
+            </div>
+            <div class="gauge">
+              <span class="gauge-num" id="gauge-co2">0.0 kg</span>
+              <span class="gauge-rotulo">CO₂ evitado</span>
+            </div>
+          </div>
+          <div class="barra eco"><div id="gauge-barra" class="barra-fill"></div></div>
+          <p class="ajuda">Estimativa simbólica: rota sem ruas repetidas = menos diesel e menos CO₂.</p>
+        </section>
+      </aside>
+
+      <!-- ----------- MAPA ----------- -->
+      <section class="mapa-wrap">
+        <div class="mapa-area">
+          <svg id="mapa" viewBox="0 0 1000 680" preserveAspectRatio="xMidYMid meet"></svg>
+          <canvas id="confetti" class="confetti"></canvas>
+          <div id="toast" class="toast"></div>
+        </div>
+        <div class="timeline-wrap">
+          <h2>Folha de rota</h2>
+          <div id="timeline" class="timeline"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="layout.js"></script>
+    <script src="render.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

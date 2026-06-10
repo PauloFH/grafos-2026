@@ -28,6 +28,11 @@ u1:
 u2:
 	go run $(U2_SRC)
 
+## web: sobe a aplicacao web do Projeto 3 (EcoUrbano) em http://localhost:8080
+.PHONY: web
+web:
+	go run ./cmd/servidor
+
 ## run: roda as duas unidades em sequencia
 .PHONY: run
 run: u1 u2

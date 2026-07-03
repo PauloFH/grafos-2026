@@ -10,27 +10,46 @@ import (
 	"github.com/PauloFH/grafos-2026/internal/algoritmos"
 	"github.com/PauloFH/grafos-2026/internal/euleriano"
 	"github.com/PauloFH/grafos-2026/internal/grafo"
+	"github.com/PauloFH/grafos-2026/internal/pcv"
 )
 
-// Server serve a API do Projeto 3 (EcoUrbano) + os arquivos estaticos do front.
-// Os grafos sao carregados uma vez na inicializacao e ficam imutaveis aqui: o
-// Hierholzer clona internamente, entao chamadas concorrentes sao seguras.
+// Server serve as APIs da U2 (EcoUrbano, /api/u2/*) e da U3 (Caixeiro
+// Viajante, /api/u3/*) + os arquivos estaticos dos fronts. Os dados sao
+// carregados uma vez na inicializacao e ficam imutaveis aqui: o Hierholzer
+// clona internamente e os algoritmos do PCV trabalham sobre copias de Rota,
+// entao chamadas concorrentes sao seguras.
 type Server struct {
-	datasets map[string]*grafo.Grafo
-	static   fs.FS
+	datasets         map[string]*grafo.Grafo
+	instancias       []*pcv.Instancia
+	instanciaPorNome map[string]*pcv.Instancia
+	static           fs.FS
 }
 
-// NovoServer cria o servidor a partir dos datasets carregados e do FS estatico.
-func NovoServer(datasets map[string]*grafo.Grafo, static fs.FS) *Server {
-	return &Server{datasets: datasets, static: static}
+// NovoServer cria o servidor a partir dos datasets da U2, das instancias do
+// PCV (na ordem de pcv.CarregaDiretorio) e do FS estatico; devolve o Server
+// pronto para servir via Rotas().
+func NovoServer(datasets map[string]*grafo.Grafo, instancias []*pcv.Instancia, static fs.FS) *Server {
+	porNome := make(map[string]*pcv.Instancia, len(instancias))
+	for _, in := range instancias {
+		porNome[in.Nome] = in
+	}
+	return &Server{
+		datasets:         datasets,
+		instancias:       instancias,
+		instanciaPorNome: porNome,
+		static:           static,
+	}
 }
 
 // Rotas devolve o handler HTTP com a API e o servidor de estaticos.
 func (s *Server) Rotas() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /api/datasets", s.handleDatasets)
-	mux.HandleFunc("GET /api/graph", s.handleGraph)
-	mux.HandleFunc("GET /api/rota", s.handleRota)
+	mux.HandleFunc("GET /api/u2/datasets", s.handleDatasets)
+	mux.HandleFunc("GET /api/u2/graph", s.handleGraph)
+	mux.HandleFunc("GET /api/u2/rota", s.handleRota)
+	mux.HandleFunc("GET /api/u3/instancias", s.handleInstanciasU3)
+	mux.HandleFunc("GET /api/u3/instancia", s.handleInstanciaU3)
+	mux.HandleFunc("GET /api/u3/resolve", s.handleResolveU3)
 	mux.Handle("/", http.FileServerFS(s.static))
 	return mux
 }

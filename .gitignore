@@ -30,3 +30,7 @@ go.work
 Thumbs.db
 
 bin
+/docs/
+.omc
+Problema_Caixeiro_Viajante
+scripts

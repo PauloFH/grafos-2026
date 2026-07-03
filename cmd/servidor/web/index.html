@@ -3,113 +3,125 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>EcoUrbano · Roteirização de Coleta (Grafos Eulerianos)</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Trabalho de Grafos — 2026</title>
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>♻️</text></svg>"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🗺️</text></svg>"
     />
+    <style>
+      :root {
+        --bg: #0e1620;
+        --painel: #152433;
+        --linha: #24384a;
+        --texto: #e7f0f5;
+        --suave: #9bb1c1;
+        --verde: #34d399;
+        --azul: #60a5fa;
+        --sombra: 0 8px 24px rgba(0, 0, 0, 0.35);
+        --raio: 14px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+      body {
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: radial-gradient(1200px 700px at 70% -10%, #173049 0%, var(--bg) 60%);
+        color: var(--texto);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 24px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 30px;
+        letter-spacing: 0.5px;
+      }
+      p.sub {
+        margin: 0 0 36px;
+        color: var(--suave);
+        font-size: 15px;
+        text-align: center;
+      }
+      .cards {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      a.card {
+        display: block;
+        width: 320px;
+        padding: 26px 24px;
+        background: var(--painel);
+        border: 1px solid var(--linha);
+        border-radius: var(--raio);
+        box-shadow: var(--sombra);
+        color: var(--texto);
+        text-decoration: none;
+        transition: transform 0.15s ease, border-color 0.15s ease;
+      }
+      a.card:hover {
+        transform: translateY(-4px);
+      }
+      a.card.u2:hover {
+        border-color: var(--verde);
+      }
+      a.card.u3:hover {
+        border-color: #ee4c9b;
+      }
+      .card .icone {
+        font-size: 40px;
+      }
+      .card .logo-plp {
+        width: 58px;
+        height: 58px;
+        border-radius: 12px;
+        object-fit: cover;
+        display: block;
+      }
+      .card h2 {
+        margin: 12px 0 6px;
+        font-size: 20px;
+      }
+      .card.u2 h2 {
+        color: var(--verde);
+      }
+      .card.u3 h2 {
+        color: #f06daf;
+      }
+      .card p {
+        margin: 0;
+        color: var(--suave);
+        font-size: 13.5px;
+        line-height: 1.5;
+      }
+    </style>
   </head>
-  <body class="mostrar-numeros">
-    <header class="topo">
-      <div class="topo-marca">
-        <span class="topo-icone">♻️</span>
-        <div>
-          <h1>EcoUrbano</h1>
-          <p>Otimização de rotas de coleta · <strong>Projeto 3 — Grafos Eulerianos</strong></p>
-        </div>
-      </div>
-      <p class="topo-dica">
-        O caminhão parte da central e percorre <strong>cada rua exatamente uma vez</strong> (trilha de
-        Hierholzer), voltando ao depósito.
-      </p>
-    </header>
-
-    <main class="layout">
-      <!-- ----------- PAINEL LATERAL ----------- -->
-      <aside class="painel">
-        <section class="bloco">
-          <h2>Tipo de malha</h2>
-          <div id="modos" class="modos"></div>
-        </section>
-
-        <section class="bloco">
-          <h2>Central de coleta</h2>
-          <select id="inicio" class="select"></select>
-          <p class="ajuda">Escolha o ponto de partida — ou <strong>clique num cruzamento</strong> no mapa.</p>
-        </section>
-
-        <section class="bloco">
-          <h2>Controles</h2>
-          <div class="botoes">
-            <button id="btn-play" class="btn primario">▶&nbsp; Coletar</button>
-            <button id="btn-reset" class="btn">↺ Reiniciar</button>
-          </div>
-          <div class="botoes">
-            <button id="btn-passo-tras" class="btn pequeno">⏮ Rua</button>
-            <button id="btn-passo-frente" class="btn pequeno">Rua ⏭</button>
-          </div>
-
-          <label class="campo">
-            <span>Velocidade <em id="velocidade-val">1.50×</em></span>
-            <input id="velocidade" type="range" min="0.25" max="6" step="0.25" value="1.5" />
-          </label>
-
-          <label class="campo">
-            <span>Progresso da rota</span>
-            <input id="scrubber" type="range" min="0" max="0" step="1" value="0" />
-          </label>
-
-          <label class="check">
-            <input id="toggle-numeros" type="checkbox" checked />
-            <span>Numerar as ruas na ordem de coleta</span>
-          </label>
-        </section>
-
-        <section class="bloco card-euler">
-          <h2>Eulerianidade</h2>
-          <div class="euler-linha">
-            <span id="euler-badge" class="badge">—</span>
-            <span id="euler-texto" class="euler-texto"></span>
-          </div>
-          <p id="euler-explica" class="euler-explica"></p>
-          <ul class="euler-dados">
-            <li><span class="rotulo">Conexo:</span> <span id="euler-conexo">—</span></li>
-            <li><span class="rotulo">Início sugerido:</span> <span id="euler-inicio">—</span></li>
-          </ul>
-          <p id="euler-detalhe" class="euler-detalhe"></p>
-        </section>
-
-        <section class="bloco card-prog">
-          <h2>Progresso da coleta</h2>
-          <div class="prog-topo">
-            <span><strong id="prog-ruas">0 / 0</strong> ruas</span>
-            <span id="prog-percent" class="prog-pct">0%</span>
-          </div>
-          <div class="barra"><div id="prog-barra" class="barra-fill"></div></div>
-          <ul class="prog-dados">
-            <li><span class="rotulo">Rua atual:</span> <span id="prog-atual">—</span></li>
-            <li><span class="rotulo">Tipo:</span> <span id="prog-tipo">—</span></li>
-          </ul>
-        </section>
-      </aside>
-
-      <!-- ----------- MAPA ----------- -->
-      <section class="mapa-wrap">
-        <div class="mapa-area">
-          <svg id="mapa" viewBox="0 0 1000 680" preserveAspectRatio="xMidYMid meet"></svg>
-          <canvas id="confetti" class="confetti"></canvas>
-          <div id="toast" class="toast"></div>
-        </div>
-        <div class="timeline-wrap">
-          <h2>Folha de rota</h2>
-          <div id="timeline" class="timeline"></div>
-        </div>
-      </section>
-    </main>
-
-    <script src="layout.js"></script>
-    <script src="render.js"></script>
-    <script src="app.js"></script>
+  <body>
+    <h1>Trabalho de Grafos — 2026</h1>
+    <p class="sub">Escolha a aplicação para explorar.</p>
+    <div class="cards">
+      <a class="card u2" href="/u2/">
+        <span class="icone">♻️</span>
+        <h2>U2 — EcoUrbano</h2>
+        <p>Rotas eulerianas para coleta de resíduos: classificação do grafo e trilha de Hierholzer animada.</p>
+      </a>
+      <a class="card u3" href="/u3/">
+        <img class="logo-plp" src="/u3/logo-plp.jpeg" alt="Programa do Leite Potiguar" />
+        <h2>U3 — Leite Potiguar</h2>
+        <p>
+          Roteirização do Programa do Leite Potiguar (PCV): heurísticas construtivas, buscas locais,
+          AG e memético.
+        </p>
+      </a>
+    </div>
   </body>
 </html>

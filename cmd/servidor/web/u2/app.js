@@ -43,7 +43,7 @@ async function api(url) {
 }
 
 async function carregarDatasets() {
-  state.datasets = await api("/api/datasets");
+  state.datasets = await api("/api/u2/datasets");
   const cont = $("modos");
   cont.replaceChildren();
   for (const d of state.datasets) {
@@ -63,7 +63,7 @@ async function selecionarDataset(id) {
   for (const b of document.querySelectorAll(".modo-btn")) {
     b.classList.toggle("ativo", b.dataset.id === id);
   }
-  state.graph = await api(`/api/graph?dataset=${encodeURIComponent(id)}`);
+  state.graph = await api(`/api/u2/graph?dataset=${encodeURIComponent(id)}`);
   state.directed = state.graph.direcionado;
   state.positions = computeLayout(state.graph.vertices, state.graph.arestas, VBOX_W, VBOX_H);
   Mapa.render(state.graph, state.positions);
@@ -75,7 +75,7 @@ async function selecionarDataset(id) {
 async function computarRota(inicio) {
   let resp;
   try {
-    const q = `/api/rota?dataset=${encodeURIComponent(state.datasetId)}${
+    const q = `/api/u2/rota?dataset=${encodeURIComponent(state.datasetId)}${
       inicio ? `&inicio=${encodeURIComponent(inicio)}` : ""
     }`;
     resp = await api(q);

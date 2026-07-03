@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Programa do Leite Potiguar · Roteirização (U3 — PCV)</title>
+    <link rel="icon" href="logo-plp.jpeg" />
+    <!-- Leaflet vendorizado (local, embedado no binario); so os TILES do mapa
+         real precisam de internet — sem rede o front segue no diagrama MDS -->
+    <link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
+    <style>
+      /* tema do Programa do Leite Potiguar: marinho profundo, rosa e branco-leite
+         (cores extraidas da logo oficial em logo-plp.jpeg) */
+      :root {
+        --bg: #111845;
+        --painel: #1a2158;
+        --linha: #2d3776;
+        --texto: #f4f6ff;
+        --suave: #aab3dd;
+        --rosa: #ee4c9b;
+        --rosa2: #d63384;
+        --leite: #f2edd5;
+        --azul: #7d8bdc;
+        --azul2: #3b82f6;
+        --verde: #34d399;
+        --ambar: #fbbf24;
+        --depot: #f59e0b;
+        --vermelho: #f87171;
+        --sombra: 0 8px 24px rgba(0, 0, 0, 0.35);
+        --raio: 14px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+      body {
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: radial-gradient(1200px 700px at 70% -10%, #1d2a7a 0%, var(--bg) 60%);
+        color: var(--texto);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      h1,
+      h2 {
+        margin: 0;
+      }
+      .topo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 22px;
+        background: linear-gradient(90deg, #141b4d, #1c2566);
+        border-bottom: 1px solid var(--linha);
+        flex-wrap: wrap;
+      }
+      .topo-marca {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .topo-logo {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        object-fit: cover;
+        box-shadow: var(--sombra);
+      }
+      .topo h1 {
+        font-size: 26px;
+        letter-spacing: 0.5px;
+        background: linear-gradient(90deg, #fbcfe8, var(--rosa));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .topo p {
+        margin: 2px 0 0;
+        color: var(--suave);
+        font-size: 13px;
+      }
+      .topo-dica {
+        max-width: 430px;
+        font-size: 12.5px;
+        color: var(--suave);
+      }
+      .topo a {
+        color: var(--rosa);
+      }
+      .layout {
+        display: flex;
+        gap: 18px;
+        padding: 18px 22px;
+        flex: 1;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+      .painel {
+        width: 320px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .bloco {
+        background: var(--painel);
+        border: 1px solid var(--linha);
+        border-radius: var(--raio);
+        box-shadow: var(--sombra);
+        padding: 14px 16px;
+      }
+      .bloco h2 {
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--suave);
+        margin-bottom: 10px;
+      }
+      .select,
+      .campo input[type="number"] {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--linha);
+        background: #141b4d;
+        color: var(--texto);
+        font-size: 14px;
+      }
+      .metodos {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .metodo-btn {
+        padding: 10px 8px;
+        border-radius: 10px;
+        border: 1px solid var(--linha);
+        background: #141b4d;
+        color: var(--texto);
+        font-size: 13px;
+        cursor: pointer;
+        transition: border-color 0.15s ease, background 0.15s ease;
+      }
+      .metodo-btn:hover:not(:disabled) {
+        border-color: var(--rosa);
+      }
+      .metodo-btn:disabled {
+        opacity: 0.45;
+        cursor: wait;
+      }
+      .campo {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--suave);
+      }
+      .chk {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--suave);
+        cursor: pointer;
+      }
+      .resultado dl {
+        margin: 0;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 4px 12px;
+        font-size: 13.5px;
+      }
+      .resultado dt {
+        color: var(--suave);
+      }
+      .resultado dd {
+        margin: 0;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .resultado .vazio {
+        color: var(--suave);
+        font-size: 13px;
+        margin: 0;
+      }
+      .rota-texto {
+        font-size: 12.5px;
+        color: var(--suave);
+        word-break: break-word;
+        line-height: 1.6;
+        margin: 0;
+      }
+      .mapa-wrap {
+        flex: 1;
+        min-width: 480px;
+        /* altura amarrada a viewport (como na U2): o mapa cabe na tela sem scroll */
+        height: calc(100vh - 150px);
+        min-height: 460px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background: var(--painel);
+        border: 1px solid var(--linha);
+        border-radius: var(--raio);
+        box-shadow: var(--sombra);
+        padding: 10px;
+      }
+      .mapa-area {
+        flex: 1;
+        min-height: 0;
+      }
+      #mapa {
+        width: 100%;
+        height: 100%;
+        display: block;
+        border-radius: 10px;
+        background: #0d1338;
+      }
+      /* mapa real (Leaflet): ocupa a mesma area; alternado via body.modo-mapa-real */
+      #mapa-real {
+        display: none;
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+        background: #0d1338;
+      }
+      body.modo-mapa-real #mapa {
+        display: none;
+      }
+      body.modo-mapa-real #mapa-real {
+        display: block;
+      }
+      .leaflet-container {
+        font: inherit;
+      }
+      .caminhao-real-icone {
+        background: none;
+        border: none;
+      }
+      .caminhao-real {
+        width: 44px;
+        height: 44px;
+        will-change: transform;
+      }
+      .caminhao-real svg {
+        display: block;
+        overflow: visible;
+      }
+      /* folha de rota (timeline embaixo do mapa, como na U2) */
+      .timeline-wrap h2 {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--suave);
+        margin: 0 0 6px;
+      }
+      .timeline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        max-height: 78px;
+        overflow-y: auto;
+        padding-right: 4px;
+      }
+      .chip {
+        border: 1px solid var(--linha);
+        background: #141b4d;
+        color: var(--suave);
+        border-radius: 999px;
+        padding: 3px 10px;
+        font-size: 11.5px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+      }
+      .chip:hover {
+        border-color: var(--rosa);
+      }
+      .chip.feito {
+        background: #3a1440;
+        border-color: var(--rosa);
+        color: #fbcfe8;
+      }
+      .chip.atual {
+        border-color: var(--ambar);
+        color: var(--texto);
+      }
+      /* controles do caminhao */
+      .botoes {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .ctrl-btn {
+        flex: 1;
+        padding: 8px 6px;
+        border-radius: 10px;
+        border: 1px solid var(--linha);
+        background: #141b4d;
+        color: var(--texto);
+        font-size: 13px;
+        cursor: pointer;
+        transition: border-color 0.15s ease, background 0.15s ease;
+      }
+      .ctrl-btn:hover:not(:disabled) {
+        border-color: var(--rosa);
+      }
+      .ctrl-btn.primario {
+        background: var(--rosa2);
+        border-color: var(--rosa2);
+        font-weight: 600;
+      }
+      .ctrl-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .campo input[type="range"] {
+        width: 100%;
+        accent-color: var(--rosa);
+      }
+      .campo em {
+        font-style: normal;
+        color: var(--texto);
+        font-variant-numeric: tabular-nums;
+      }
+      /* --- SVG (usado por render.js) --- */
+      .rota-path {
+        fill: none;
+        stroke: var(--rosa);
+        stroke-width: 3;
+        stroke-linejoin: round;
+      }
+      .rota-antes-path {
+        fill: none;
+        stroke: #8fa4b5;
+        stroke-width: 2.5;
+        stroke-dasharray: 6 5;
+        opacity: 0.55;
+      }
+      /* rastro do leite entregue: branco-creme sobre a rota rosa */
+      .rota-percorrida {
+        fill: none;
+        stroke: var(--leite);
+        stroke-width: 4.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        opacity: 0.92;
+      }
+      .cidade circle {
+        fill: #232c68;
+        stroke: var(--azul);
+        stroke-width: 2;
+      }
+      .cidade.deposito circle {
+        fill: #4a3407;
+        stroke: var(--depot);
+        stroke-width: 3;
+      }
+      .cidade text.cidade-id {
+        fill: var(--texto);
+        font-size: 9px;
+        font-weight: 700;
+        text-anchor: middle;
+        dominant-baseline: central;
+        pointer-events: none;
+      }
+      .cidade text.cidade-nome {
+        fill: var(--suave);
+        font-size: 8.5px;
+        text-anchor: middle;
+        pointer-events: none;
+      }
+      .badge circle {
+        fill: var(--ambar);
+        stroke: #6b4e00;
+        stroke-width: 1;
+      }
+      .badge text {
+        fill: #241a00;
+        font-size: 7.5px;
+        font-weight: 700;
+        text-anchor: middle;
+        dominant-baseline: central;
+        pointer-events: none;
+      }
+      /* caminhao-tanque do PLP: corpo branco-leite, cabine rosa (cores da logo) */
+      .caminhao-corpo {
+        fill: var(--leite);
+        stroke: #8f86b8;
+        stroke-width: 1.5;
+      }
+      .caminhao-bau {
+        fill: #ffffff;
+      }
+      .caminhao-cabine {
+        fill: var(--rosa);
+      }
+      .caminhao-vidro {
+        fill: #141b4d;
+      }
+      .caminhao-farol {
+        fill: #fde68a;
+      }
+      .caminhao-simbolo {
+        font-size: 11px;
+      }
+      .caminhao-halo {
+        fill: rgba(238, 76, 155, 0.2);
+        animation: halo-pcv 1.4s ease-in-out infinite;
+      }
+      @keyframes halo-pcv {
+        0%,
+        100% {
+          r: 20;
+          opacity: 0.5;
+        }
+        50% {
+          r: 27;
+          opacity: 0.12;
+        }
+      }
+      body:not(.mostrar-numeros) .camada-badges {
+        display: none;
+      }
+      body:not(.mostrar-antes) .camada-rota-antes {
+        display: none;
+      }
+      #toast {
+        position: fixed;
+        left: 50%;
+        bottom: 26px;
+        transform: translateX(-50%) translateY(20px);
+        background: #26140f;
+        color: #fecaca;
+        border: 1px solid var(--vermelho);
+        border-radius: 10px;
+        padding: 10px 18px;
+        font-size: 13.5px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+        max-width: 80vw;
+      }
+      #toast.visivel {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body class="mostrar-numeros mostrar-antes">
+    <header class="topo">
+      <div class="topo-marca">
+        <img src="logo-plp.jpeg" alt="Logo do Programa do Leite Potiguar" class="topo-logo" />
+        <div>
+          <h1>Programa do Leite Potiguar</h1>
+          <p>Roteirização da distribuição de leite no RN · <strong>Unidade 3 — PCV</strong></p>
+        </div>
+      </div>
+      <p class="topo-dica">
+        O caminhão do PLP sai da usina em <strong>ANGICOS</strong>, entrega o leite em
+        <strong>cada município exatamente uma vez</strong> e retorna à usina.
+        <a href="/">← voltar à landing</a>
+      </p>
+    </header>
+
+    <main class="layout">
+      <!-- ----------- PAINEL LATERAL ----------- -->
+      <aside class="painel">
+        <section class="bloco">
+          <h2>Instância</h2>
+          <select id="instancia" class="select"></select>
+          <label class="chk">
+            <input id="toggle-mapa-real" type="checkbox" />
+            <span>🗺️ Mapa real (OpenStreetMap)</span>
+          </label>
+        </section>
+
+        <section class="bloco">
+          <h2>Métodos</h2>
+          <div id="metodos" class="metodos"></div>
+          <label class="campo">
+            <span>Semente (AG / Memético)</span>
+            <input id="semente" type="number" value="42" step="1" />
+          </label>
+          <label class="chk">
+            <input id="toggle-antes" type="checkbox" checked />
+            <span>Mostrar rota antes da busca local</span>
+          </label>
+          <label class="chk">
+            <input id="toggle-numeros" type="checkbox" checked />
+            <span>Mostrar numeração da ordem</span>
+          </label>
+        </section>
+
+        <section class="bloco">
+          <h2>🥛 Caminhão do leite</h2>
+          <div class="botoes">
+            <button id="btn-play" class="ctrl-btn primario" disabled>▶&nbsp; Percorrer</button>
+            <button id="btn-reset" class="ctrl-btn" disabled>↺ Reiniciar</button>
+          </div>
+          <div class="botoes">
+            <button id="btn-passo-tras" class="ctrl-btn" disabled>⏮ Cidade</button>
+            <button id="btn-passo-frente" class="ctrl-btn" disabled>Cidade ⏭</button>
+          </div>
+          <label class="campo">
+            <span>Velocidade <em id="velocidade-val">1.50×</em></span>
+            <input id="velocidade" type="range" min="0.25" max="6" step="0.25" value="1.5" />
+          </label>
+          <label class="campo">
+            <span>Progresso · <strong id="prog-cidades">0 / 0</strong> entregas</span>
+            <input id="scrubber" type="range" min="0" max="0" step="1" value="0" disabled />
+          </label>
+        </section>
+
+        <section class="bloco resultado">
+          <h2>Resultado</h2>
+          <div id="resultado"><p class="vazio">Escolha um método para resolver.</p></div>
+        </section>
+
+        <section class="bloco">
+          <h2>Sequência de entrega (ids)</h2>
+          <p id="rota-texto" class="rota-texto">—</p>
+        </section>
+      </aside>
+
+      <!-- ----------- MAPA ----------- -->
+      <div class="mapa-wrap">
+        <div class="mapa-area">
+          <svg
+            id="mapa"
+            viewBox="0 0 1000 680"
+            preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+          ></svg>
+          <div id="mapa-real"></div>
+        </div>
+        <div class="timeline-wrap">
+          <h2>Roteiro de entrega</h2>
+          <div id="timeline" class="timeline"></div>
+        </div>
+      </div>
+    </main>
+
+    <div id="toast"></div>
+
+    <script src="vendor/leaflet/leaflet.js"></script>
+    <script src="coords-rn.js"></script>
+    <script src="render.js"></script>
+    <script src="mapa-real.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,16 +1,19 @@
-// Comando unidade3 roda a Unidade 3 (PCV): le inputs_u3/*.txt, roda os 4
-// metodos (VMP+2opt, IMB+OrOpt, AG e Memetico) e grava relatorios, resumos e
-// o comparativo geral em outputs_u3/. Este esqueleto do scaffolding marca nos
 // TODOs os pontos de integracao das Partes 1 a 4.
 package main
 
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/PauloFH/grafos-2026/internal/pcv"
 )
+
+//semente da primeira execucao dos metodos estocasticos;
+const sementeBase int64 = 42
+
+const execucoesEstocasticas = 20
 
 func main() {
 	entradas := "inputs_u3"
@@ -49,8 +52,6 @@ func main() {
 	fmt.Println("Concluido. Saidas em:", saidas)
 }
 
-// imprimeTabelaInstancias imprime nome, medida, N e melhor valor conhecido
-// de cada instancia ("-" quando ausente de ValoresOtimos).
 func imprimeTabelaInstancias(instancias []*pcv.Instancia) {
 	fmt.Printf("%-12s | %-6s | %3s | %s\n", "Instancia", "Medida", "N", "Melhor conhecido")
 	fmt.Println(strings.Repeat("-", 50))
@@ -63,12 +64,9 @@ func imprimeTabelaInstancias(instancias []*pcv.Instancia) {
 	}
 }
 
-// processaInstancia roda os 4 metodos sobre uma instancia e grava os
-// arquivos em outputs_u3/; enquanto as Partes 1 a 4 nao integrarem, apenas
-// anuncia a instancia (chamadas canonicas nos TODOs abaixo).
+
 func processaInstancia(in *pcv.Instancia, saidas string) {
 	fmt.Printf("[%s] processando (%s, N=%d)...\n", in.Nome, in.Medida, in.N)
-	_ = saidas // usado quando as Partes 1-4 integrarem as chamadas abaixo
 
 	// TODO(Parte 1): VMP + 2-opt (deterministico, 1 execucao):
 	//   antes := pcv.VizinhoMaisProximo{}.Constroi(in)
@@ -78,10 +76,16 @@ func processaInstancia(in *pcv.Instancia, saidas string) {
 	//   antes := pcv.InsercaoMaisBarata{}.Constroi(in)
 	//   depois := pcv.OrOpt{}.Aplica(antes, in)
 
-	// TODO(Parte 3): AG, 20 execucoes com sementes sementeBase+i:
-	//   ag := pcv.AlgoritmoGenetico{Par: pcv.ParametrosPadrao()}
-	//   resumoAG := pcv.ExecutaExperimento(ag, in, 20, sementeBase)
-	//   gravar outputs_u3/RESUMO_AG_<in.Nome>.txt com resumoAG.TextoResumo(in)
+	
+	ag := pcv.AlgoritmoGenetico{Par: pcv.ParametrosPadrao()}
+	resumoAG := pcv.ExecutaExperimento(ag, in, execucoesEstocasticas, sementeBase)
+	caminhoAG := filepath.Join(saidas, "RESUMO_AG_"+in.Nome+".txt")
+	if err := os.WriteFile(caminhoAG, []byte(resumoAG.TextoResumo(in)), 0o644); err != nil {
+		fmt.Println("Erro:", err)
+		os.Exit(1)
+	}
+	fmt.Printf("[%s] AG: menor=%.2f media=%.2f -> %s\n",
+		in.Nome, resumoAG.Melhor, resumoAG.Media, caminhoAG)
 
 	// TODO(Parte 4): Memetico (pop=50, ger=200, Buscas={DoisOpt, OrOpt,
 	// Swap}), 20 execucoes; gravar outputs_u3/RESUMO_MEMETICO_<in.Nome>.txt.

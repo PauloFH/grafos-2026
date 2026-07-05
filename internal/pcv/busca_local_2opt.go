@@ -1,13 +1,13 @@
 package pcv
 
-//O algoritmo tenta melhorar uma rota invertendo trechos do percurso.
+// DoisOpt tenta melhorar uma rota invertendo trechos do percurso.
 type DoisOpt struct{}
 
 func (DoisOpt) Nome() string {
 	return "2-opt"
 }
 
-//inverterTrecho inverte os elementos do slice entre as posições
+// inverterTrecho inverte os elementos do slice entre as posições inicio e fim.
 func inverterTrecho(ordem []int, inicio, fim int) {
 	for inicio < fim {
 		ordem[inicio], ordem[fim] = ordem[fim], ordem[inicio]
@@ -17,50 +17,54 @@ func inverterTrecho(ordem []int, inicio, fim int) {
 }
 
 // Aplica executa a busca local 2-opt sobre a rota recebida.
-// A rota original não é modificada, sempre é utilizada uma cópia.
-// (Best Improvement). O algoritmo termina quando não há mais melhorias.
+// Utiliza avaliação por Delta em O(1) e trata o fechamento do ciclo.
 func (DoisOpt) Aplica(r Rota, in *Instancia) Rota {
-	//Cria uma cópia da rota
 	atual := r.Clona()
+	n := len(atual.Ordem)
 
 	for {
 		melhorou := false
+		melhorI, melhorJ := -1, -1
+		melhorDelta := 0.0 // Delta negativo significa que o custo diminuiu!
 
-		// Guarda o melhor vizinho encontrado nesta iteração.
-		melhorVizinho := atual
-		melhorCusto := atual.Custo
+		// O 'i' vai até o penúltimo elemento
+		for i := 1; i < n-1; i++ {
 
-		// Testa todas as combinações possíveis de inversão.
-		for i := 1; i < len(atual.Ordem)-2; i++ {
-			for j := i + 1; j < len(atual.Ordem)-1; j++ {
+			for j := i + 1; j < n; j++ {
 
-				// Cria uma nova rota candidata.
-				candidato := atual.Clona()
+				// Evita o movimento degenerado (inverter a rota inteira não altera o custo no PCV simétrico)
+				if i == 1 && j == n-1 {
+					continue
+				}
 
-				// Inverte o trecho selecionado
-				inverterTrecho(candidato.Ordem, i, j)
+				// "Efeito Relógio": Se o j for o último, a próxima cidade (j+1) é o Depósito (índice 0)
+				proxJ := (j + 1) % n
 
-				//calcula o custo
-				candidato.Custo = CustoRota(candidato.Ordem, in)
+				// Cálculo do Delta: somamos os custos das arestas NOVAS e subtraímos as arestas VELHAS
+				delta := in.Custo(atual.Ordem[i-1], atual.Ordem[j]) +
+					in.Custo(atual.Ordem[i], atual.Ordem[proxJ]) -
+					in.Custo(atual.Ordem[i-1], atual.Ordem[i]) -
+					in.Custo(atual.Ordem[j], atual.Ordem[proxJ])
 
-				// Caso encontre uma solução melhor, guarda como melhor vizinho da iteração.
-				if candidato.Custo < melhorCusto {
-					melhorVizinho = candidato
-					melhorCusto = candidato.Custo
+				if delta < melhorDelta-1e-9 {
+					melhorDelta = delta
+					melhorI = i
+					melhorJ = j
 					melhorou = true
 				}
 			}
 		}
 
-		// Se nenhuma melhoria foi encontrada,
-		// a busca chegou a um ótimo local.
-		if !melhorou {
+		if melhorou {
+			// Aplica a inversão definitiva no mesmo array (in-place) sem alocar memória nova
+			inverterTrecho(atual.Ordem, melhorI, melhorJ)
+			atual.Custo += melhorDelta
+		} else {
 			break
 		}
-
-		//continua a busca a partir da melhor solução
-		atual = melhorVizinho
 	}
 
+	// Recalcula o custo final apenas por garantia contra pequenos erros de ponto flutuante
+	atual.Custo = CustoRota(atual.Ordem, in)
 	return atual
 }

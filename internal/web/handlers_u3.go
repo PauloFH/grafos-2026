@@ -19,7 +19,6 @@ func (s *Server) handleInstanciasU3(w http.ResponseWriter, _ *http.Request) {
 	escreveJSON(w, http.StatusOK, infos)
 }
 
-
 func (s *Server) handleInstanciaU3(w http.ResponseWriter, r *http.Request) {
 	in, ok := s.instanciaPorNome[r.URL.Query().Get("id")]
 	if !ok {
@@ -61,11 +60,33 @@ func (s *Server) handleResolveU3(w http.ResponseWriter, r *http.Request) {
 
 	switch metodo {
 	case "vmp":
-		// rota := pcv.DoisOpt{}.Aplica(r0, in); antes = r0.
-		escreveJSON(w, http.StatusOK, falhaResolveU3(metodo, "nao implementado"))
+		// construtivo deterministico - a semente e ignorada. Quando o 2-opt
+		// existir: Antes = rota construtiva, Rota = pcv.DoisOpt{}.Aplica(rota, in).
+		inicio := time.Now()
+		rota := pcv.VizinhoMaisProximo{}.Constroi(in)
+		tempoMs := float64(time.Since(inicio).Nanoseconds()) / 1e6
+		escreveJSON(w, http.StatusOK, SolveResponse{
+			OK:         true,
+			Metodo:     metodo,
+			Antes:      nil,
+			Rota:       RotaDTO{Ordem: rota.IdsOriginais(in), Custo: rota.Custo},
+			GapPercent: pcv.Gap(rota.Custo, pcv.ValoresOtimos[in.Nome]),
+			TempoMs:    tempoMs,
+		})
 	case "imb":
-		// rota := pcv.OrOpt{}.Aplica(r0, in); antes = r0.
-		escreveJSON(w, http.StatusOK, falhaResolveU3(metodo, "nao implementado"))
+		// construtivo deterministico - a semente e ignorada. Quando o Or-opt
+		// existir: Antes = rota construtiva, Rota = pcv.OrOpt{}.Aplica(rota, in).
+		inicio := time.Now()
+		rota := pcv.InsercaoMaisBarata{}.Constroi(in)
+		tempoMs := float64(time.Since(inicio).Nanoseconds()) / 1e6
+		escreveJSON(w, http.StatusOK, SolveResponse{
+			OK:         true,
+			Metodo:     metodo,
+			Antes:      nil,
+			Rota:       RotaDTO{Ordem: rota.IdsOriginais(in), Custo: rota.Custo},
+			GapPercent: pcv.Gap(rota.Custo, pcv.ValoresOtimos[in.Nome]),
+			TempoMs:    tempoMs,
+		})
 	case "ag":
 		// Uma execucao do AG com a semente pedida
 		ag := pcv.AlgoritmoGenetico{Par: pcv.ParametrosPadrao()}

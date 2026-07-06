@@ -10,7 +10,7 @@ import (
 	"github.com/PauloFH/grafos-2026/internal/pcv"
 )
 
-//semente da primeira execucao dos metodos estocasticos;
+// semente da primeira execucao dos metodos estocasticos;
 const sementeBase int64 = 42
 
 const execucoesEstocasticas = 20
@@ -64,7 +64,6 @@ func imprimeTabelaInstancias(instancias []*pcv.Instancia) {
 	}
 }
 
-
 func processaInstancia(in *pcv.Instancia, saidas string) {
 	fmt.Printf("[%s] processando (%s, N=%d)...\n", in.Nome, in.Medida, in.N)
 
@@ -76,7 +75,6 @@ func processaInstancia(in *pcv.Instancia, saidas string) {
 	//   antes := pcv.InsercaoMaisBarata{}.Constroi(in)
 	//   depois := pcv.OrOpt{}.Aplica(antes, in)
 
-	
 	ag := pcv.AlgoritmoGenetico{Par: pcv.ParametrosPadrao()}
 	resumoAG := pcv.ExecutaExperimento(ag, in, execucoesEstocasticas, sementeBase)
 	caminhoAG := filepath.Join(saidas, "RESUMO_AG_"+in.Nome+".txt")

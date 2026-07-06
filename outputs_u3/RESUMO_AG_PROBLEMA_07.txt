@@ -5,7 +5,7 @@ Instancia        : PROBLEMA_07 (KM, N=12)
 Execucoes        : 20
 Menor valor      : 672.70
 Valor medio      : 675.14
-Tempo medio      : 0.003s
+Tempo medio      : 0.002s
 Melhor conhecido : 672.70
 Gap do menor     : -0.00%
 --------------------------------------------------

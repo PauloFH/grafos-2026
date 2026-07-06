@@ -13,9 +13,12 @@ func ParametrosMemeticoPadrao() ParametrosAG {
 		TaxaMutacao:    0.10,
 		TamTorneio:     3,
 		Elitismo:       2,
-		TaxaEducacao:   0.2,
+		// TaxaEducacao=0.1 melhor que 0.2 nas instancias testadas
+		TaxaEducacao: 0.1,
 	}
 }
+
+const limiarDiversificacao = 50
 
 var buscasLocaisMemetico = []BuscaLocal{DoisOpt{}, OrOpt{}, Swap{}}
 
@@ -34,13 +37,18 @@ func (a AlgoritmoMemetico) Executa(in *Instancia, semente int64) Rota {
 	// (2) Fitness: custo de cada individuo ja calculado por PopulacaoInicial/NovaRota
 	melhor := pop[indiceMenorCusto(pop)].Clona()
 	semMelhora := 0
+	taxaMutacao := a.Par.TaxaMutacao
 
 	for geracao := 1; geracao <= a.Par.Geracoes; geracao++ {
 		// (3) Nova Geracao: Selecao (torneio + elitismo), Cruzamento (OX), Mutacao (inversao)
-		nova := novaGeracaoMemetico(pop, a.Par, in, rng)
+		nova := novaGeracaoMemetico(pop, a.Par, taxaMutacao, in, rng)
 
 		// (4) Busca Local: educa parte da nova populacao com 2-opt, Or-opt ou Swap
 		nova = educaPopulacao(nova, a.Par.TaxaEducacao, in, rng)
+
+		// Elite recebe as 3 buscas locais em cadeia, garantindo
+		// o maximo resultado nas solucoes mais promissoras
+		nova = educaElite(nova, a.Par.Elitismo, in)
 
 		// (5) Renovar
 		pop = nova
@@ -50,8 +58,13 @@ func (a AlgoritmoMemetico) Executa(in *Instancia, semente int64) Rota {
 		if melhorGer.Custo < melhor.Custo-1e-9 {
 			melhor = melhorGer.Clona()
 			semMelhora = 0
+			taxaMutacao = a.Par.TaxaMutacao // encontrou melhora, volta a mutacao ao normal
 		} else {
 			semMelhora++
+			if semMelhora == limiarDiversificacao {
+				// Para diversificar a populacao, antes de desistir, se estagnar, dobra a mutação
+				taxaMutacao = min(1.0, a.Par.TaxaMutacao*2)
+			}
 		}
 		if semMelhora >= 100 {
 			break
@@ -63,8 +76,7 @@ func (a AlgoritmoMemetico) Executa(in *Instancia, semente int64) Rota {
 
 // novaGeracaoMemetico monta a etapa (3) Nova Geracao: os Par.Elitismo
 // melhores da populacao atual passam intactos, e o restante vem de torneio
-// (3.1 Selecao) + OX (3.2 Cruzamento) + inversao (3.3 Mutacao).
-func novaGeracaoMemetico(pop []Rota, par ParametrosAG, in *Instancia, rng *rand.Rand) []Rota {
+func novaGeracaoMemetico(pop []Rota, par ParametrosAG, taxaMutacao float64, in *Instancia, rng *rand.Rand) []Rota {
 	idx := make([]int, len(pop))
 	for i := range idx {
 		idx[i] = i
@@ -87,15 +99,28 @@ func novaGeracaoMemetico(pop []Rota, par ParametrosAG, in *Instancia, rng *rand.
 		} else {
 			filho = pai1.Clona()
 		}
-		filho = mutacaoInversao(filho, par.TaxaMutacao, in, rng)
+		filho = mutacaoInversao(filho, taxaMutacao, in, rng)
 		nova = append(nova, filho)
 	}
 	return nova
 }
 
-// educaPopulacao e a etapa (4) Busca Local: com probabilidade taxa (por
-// individuo), sorteia uma das buscas locais (2-opt, Or-opt, Swap) e a aplica
-// ate o otimo local daquela vizinhanca.
+// educaElite aplica as 3 buscas locais em cadeia (2-opt -> Or-opt -> Swap)
+// aos n primeiros individuos de pop - a elite
+func educaElite(pop []Rota, n int, in *Instancia) []Rota {
+	for i := 0; i < n && i < len(pop); i++ {
+		r := pop[i]
+		for _, busca := range buscasLocaisMemetico {
+			r = busca.Aplica(r, in)
+		}
+		pop[i] = r
+	}
+	return pop
+}
+
+// educaPopulacao e a etapa (4) Busca Local: com probabilidade taxa,
+// sorteia uma das buscas locais (2-opt, Or-opt, Swap) e a aplica
+// ate o otimo local daquela vizinhanca
 func educaPopulacao(pop []Rota, taxa float64, in *Instancia, rng *rand.Rand) []Rota {
 	if taxa <= 0 {
 		return pop

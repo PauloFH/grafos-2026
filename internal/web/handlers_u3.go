@@ -102,8 +102,18 @@ func (s *Server) handleResolveU3(w http.ResponseWriter, r *http.Request) {
 			TempoMs:    tempoMs,
 		})
 	case "memetico":
-		// p.Geracoes = 200; rota := pcv.AlgoritmoMemetico{...}.Executa(in, semente).
-		escreveJSON(w, http.StatusOK, falhaResolveU3(metodo, "nao implementado"))
+		memetico := pcv.AlgoritmoMemetico{Par: pcv.ParametrosMemeticoPadrao()}
+		inicio := time.Now()
+		rota := memetico.Executa(in, semente)
+		tempoMs := float64(time.Since(inicio).Nanoseconds()) / 1e6
+		escreveJSON(w, http.StatusOK, SolveResponse{
+			OK:         true,
+			Metodo:     metodo,
+			Antes:      nil,
+			Rota:       RotaDTO{Ordem: rota.IdsOriginais(in), Custo: rota.Custo},
+			GapPercent: pcv.Gap(rota.Custo, pcv.ValoresOtimos[in.Nome]),
+			TempoMs:    tempoMs,
+		})
 	default:
 		escreveJSON(w, http.StatusOK, falhaResolveU3(metodo, "metodo desconhecido: "+metodo))
 	}

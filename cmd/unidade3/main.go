@@ -88,10 +88,13 @@ func processaInstancia(in *pcv.Instancia, saidas string) {
 	fmt.Printf("[%s] AG: menor=%.2f media=%.2f -> %s\n",
 		in.Nome, resumoAG.Melhor, resumoAG.Media, caminhoAG)
 
-	// TODO(Parte 4): Memetico (pop=50, ger=200, Buscas={DoisOpt, OrOpt,
-	// Swap}), 20 execucoes; gravar outputs_u3/RESUMO_MEMETICO_<in.Nome>.txt.
-
-	// TODO(Parte 4): relatorio por instancia (outputs_u3/<in.Nome>.txt) com
-	// as secoes INSTANCIA, VIZINHO_MAIS_PROXIMO, INSERCAO_MAIS_BARATA,
-	// ALGORITMO_GENETICO e ALGORITMO_MEMETICO.
+	memetico := pcv.AlgoritmoMemetico{Par: pcv.ParametrosMemeticoPadrao()}
+	resumoMemetico := pcv.ExecutaExperimento(memetico, in, execucoesEstocasticas, sementeBase)
+	caminhoMemetico := filepath.Join(saidas, "RESUMO_MEMETICO_"+in.Nome+".txt")
+	if err := os.WriteFile(caminhoMemetico, []byte(resumoMemetico.TextoResumo(in)), 0o644); err != nil {
+		fmt.Println("Erro:", err)
+		os.Exit(1)
+	}
+	fmt.Printf("[%s] Memetico: menor=%.2f media=%.2f -> %s\n",
+		in.Nome, resumoMemetico.Melhor, resumoMemetico.Media, caminhoMemetico)
 }

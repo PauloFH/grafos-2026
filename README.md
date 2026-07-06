@@ -190,7 +190,7 @@ GET /api/u3/resolve?id=PROBLEMA_01&metodo=vmp|imb|ag|memetico[&semente=42] → 1
 | 3 | Algoritmo Genético | _a definir_ | `genetico.go`, `operadores.go`, `experimento.go` |
 | 4 | 2-opt | João Marcelo | `busca_local_2opt.go` |
 | 5 | Or-opt | João Marcelo | `busca_local_oropt.go` |
-| 6 | Algoritmo Memético (inclui a busca Swap) | _a definir_ | `memetico.go`, `busca_local_swap.go` |
+| 6 | Algoritmo Memético (inclui a busca Swap) | João Victor | `memetico.go`, `busca_local_swap.go` |
 | 7 | Front web U3 — API, servidor e integração final | _a definir_ | `cmd/servidor/web/u3/`, `handlers_u3.go`, `layout_mds.go`, divisão U2/U3 do servidor, `cmd/unidade3/main.go` final, `COMPARATIVO_GERAL` |
 | — | Relatório escrito, planilha de resultados e vídeo | Todos | — |
 

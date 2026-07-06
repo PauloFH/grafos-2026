@@ -10,7 +10,7 @@ import (
 	"github.com/PauloFH/grafos-2026/internal/pcv"
 )
 
-//semente da primeira execucao dos metodos estocasticos;
+// semente da primeira execucao dos metodos estocasticos;
 const sementeBase int64 = 42
 
 const execucoesEstocasticas = 20
@@ -64,19 +64,20 @@ func imprimeTabelaInstancias(instancias []*pcv.Instancia) {
 	}
 }
 
-
 func processaInstancia(in *pcv.Instancia, saidas string) {
 	fmt.Printf("[%s] processando (%s, N=%d)...\n", in.Nome, in.Medida, in.N)
 
-	// TODO(Parte 1): VMP + 2-opt (deterministico, 1 execucao):
-	//   antes := pcv.VizinhoMaisProximo{}.Constroi(in)
-	//   depois := pcv.DoisOpt{}.Aplica(antes, in)
+	// Heuristicas construtivas (deterministicas, 1 execucao cada).
+	otimo := pcv.ValoresOtimos[in.Nome]
 
-	// TODO(Parte 2): IMB + Or-opt (deterministico, 1 execucao):
-	//   antes := pcv.InsercaoMaisBarata{}.Constroi(in)
-	//   depois := pcv.OrOpt{}.Aplica(antes, in)
+	vmp := pcv.VizinhoMaisProximo{}.Constroi(in)
+	// TODO: depois := pcv.DoisOpt{}.Aplica(vmp, in)
+	fmt.Printf("[%s] VMP: custo=%.2f gap=%.2f%%\n", in.Nome, vmp.Custo, pcv.Gap(vmp.Custo, otimo))
 
-	
+	imb := pcv.InsercaoMaisBarata{}.Constroi(in)
+	// TODO: depois := pcv.OrOpt{}.Aplica(imb, in)
+	fmt.Printf("[%s] IMB: custo=%.2f gap=%.2f%%\n", in.Nome, imb.Custo, pcv.Gap(imb.Custo, otimo))
+
 	ag := pcv.AlgoritmoGenetico{Par: pcv.ParametrosPadrao()}
 	resumoAG := pcv.ExecutaExperimento(ag, in, execucoesEstocasticas, sementeBase)
 	caminhoAG := filepath.Join(saidas, "RESUMO_AG_"+in.Nome+".txt")

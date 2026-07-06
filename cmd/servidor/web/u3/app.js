@@ -281,7 +281,7 @@ function finalizar() {
   if (anim.playing) {
     anim.playing = false;
     atualizarBotaoPlay();
-    toast("Entregas concluídas — caminhão de volta à usina de Angicos 🥛🎉");
+    toast("Entregas concluídas — caminhão de volta à usina de Angicos 🥛🎉", "sucesso");
   }
   atualizarProgresso();
 }
@@ -429,9 +429,11 @@ function preencherResultado(cfg, resp) {
 // ---------- toast ----------
 
 let toastTimer = null;
-function toast(msg) {
+function toast(msg, tipo) {
   const t = $("toast");
   t.textContent = msg;
+  // sucesso pinta o aviso de verde; o padrao (erro) segue vermelho
+  t.classList.toggle("sucesso", tipo === "sucesso");
   t.classList.add("visivel");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove("visivel"), 4000);

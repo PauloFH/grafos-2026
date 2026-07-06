@@ -185,8 +185,8 @@ GET /api/u3/resolve?id=PROBLEMA_01&metodo=vmp|imb|ag|memetico[&semente=42] → 1
 | Item | Conteúdo / Função | Responsável | Arquivos principais |
 |---|---|---|---|
 | 0 | Base — contrato `internal/pcv`, instâncias, esqueleto do CLI (concluída) | — | `modelo.go`, `leitor_pcv.go`, `referencia.go`, `inputs_u3/`, `cmd/unidade3/main.go` |
-| 1 | Vizinho mais Próximo | _a definir_ | `vizinho_mais_proximo.go` |
-| 2 | Inserção mais Barata | _a definir_ | `insercao_mais_barata.go` |
+| 1 | Vizinho mais Próximo | Diego | `vizinho_mais_proximo.go` |
+| 2 | Inserção mais Barata | Diego | `insercao_mais_barata.go` |
 | 3 | Algoritmo Genético | _a definir_ | `genetico.go`, `operadores.go`, `experimento.go` |
 | 4 | 2-opt | _a definir_ | `busca_local_2opt.go` |
 | 5 | Or-opt | _a definir_ | `busca_local_oropt.go` |

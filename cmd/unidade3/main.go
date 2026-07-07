@@ -7,21 +7,15 @@ import (
 	"strings"
 
 	"github.com/PauloFH/grafos-2026/internal/pcv"
+	"github.com/PauloFH/grafos-2026/internal/relatorio"
+	"github.com/PauloFH/grafos-2026/internal/web"
 )
 
-// semente da primeira execucao dos metodos estocasticos;
+// sementeBase e a semente da primeira execucao dos metodos estocasticos;
 const sementeBase int64 = 42
-const execucoesEstocasticas = 20
 
-// ResultadoInstancia armazena os custos para o comparativo final.
-type ResultadoInstancia struct {
-	Nome      string
-	Otimo     float64
-	VMP_2opt  float64
-	IMB_OrOpt float64
-	AG        float64
-	Memetico  float64
-}
+// execucoesEstocasticas e o numero de execucoes independentes de cada metaheuristica por instancia
+const execucoesEstocasticas = 20
 
 func main() {
 	entradas := "inputs_u3"
@@ -49,19 +43,33 @@ func main() {
 	imprimeTabelaInstancias(instancias)
 	fmt.Println()
 
-	resultados := make([]ResultadoInstancia, 0, len(instancias))
-
-	for _, in := range instancias {
-		res := processaInstancia(in, saidas)
-		resultados = append(resultados, res)
+	// imagens PNG das rotas sao um extra: exigem graphviz
+	gerarImagens := relatorio.GraphvizDisponivel()
+	if !gerarImagens {
+		fmt.Println("Aviso: graphviz (neato) nao encontrado - imagens das rotas nao serao geradas.")
+		fmt.Println()
 	}
 
-	// Parte 4: gerar outputs_u3/COMPARATIVO_GERAL.txt
-	gerarComparativoGeral(resultados, saidas)
+	// acumula uma linha por instancia para o comparativo geral
+	linhas := make([]relatorio.LinhaComparativo, 0, len(instancias))
+	for _, in := range instancias {
+		linhas = append(linhas, processaInstancia(in, saidas, gerarImagens))
+	}
 
-	fmt.Println("\nConcluido. Saidas em:", saidas)
+	// COMPARATIVO_GERAL.txt: tabela final com o melhor custo de cada metodo
+	// (AG e Memetico entram com o MENOR das 20 execucoes) e o gap vs otimo.
+	caminhoComp := filepath.Join(saidas, "COMPARATIVO_GERAL.txt")
+	if err := os.WriteFile(caminhoComp, []byte(relatorio.FormataComparativoPCV(linhas)), 0o644); err != nil {
+		fmt.Println("Erro:", err)
+		os.Exit(1)
+	}
+	fmt.Println("Comparativo geral ->", caminhoComp)
+
+	fmt.Println("Concluido. Saidas em:", saidas)
 }
 
+// imprimeTabelaInstancias imprime nome, medida, N e melhor valor conhecido
+// de cada instancia
 func imprimeTabelaInstancias(instancias []*pcv.Instancia) {
 	fmt.Printf("%-12s | %-6s | %3s | %s\n", "Instancia", "Medida", "N", "Melhor conhecido")
 	fmt.Println(strings.Repeat("-", 50))
@@ -74,79 +82,113 @@ func imprimeTabelaInstancias(instancias []*pcv.Instancia) {
 	}
 }
 
-func processaInstancia(in *pcv.Instancia, saidas string) ResultadoInstancia {
+// processaInstancia roda os 4 metodos sobre uma instancia, grava os arquivos
+// de saida em outputs_u3/ (RESUMO_AG, RESUMO_MEMETICO, o relatorio por
+// instancia PROBLEMA_XX.txt e, se gerarImagens, os PNGs das rotas) e devolve
+// a linha do comparativo geral.
+func processaInstancia(in *pcv.Instancia, saidas string, gerarImagens bool) relatorio.LinhaComparativo {
 	fmt.Printf("[%s] processando (%s, N=%d)...\n", in.Nome, in.Medida, in.N)
 	otimo := pcv.ValoresOtimos[in.Nome]
 
-	// 1. VMP + 2-opt
+	// (1) Vizinho mais Proximo + 2-opt (deterministico, 1 execucao)
 	vmp := pcv.VizinhoMaisProximo{}.Constroi(in)
-	depoisVMP := pcv.DoisOpt{}.Aplica(vmp, in)
-	fmt.Printf("   -> VMP+2opt: custo=%.2f gap=%.2f%%\n", depoisVMP.Custo, pcv.Gap(depoisVMP.Custo, otimo))
+	vmp2opt := pcv.DoisOpt{}.Aplica(vmp, in)
+	fmt.Printf("[%s] VMP+2opt: %.2f -> %.2f (gap %.2f%%)\n",
+		in.Nome, vmp.Custo, vmp2opt.Custo, pcv.Gap(vmp2opt.Custo, otimo))
 
-	// 2. IMB + Or-opt
+	// (2) Insercao mais Barata + Or-opt (deterministico, 1 execucao)
 	imb := pcv.InsercaoMaisBarata{}.Constroi(in)
-	depoisIMB := pcv.OrOpt{}.Aplica(imb, in)
-	fmt.Printf("   -> IMB+OrOpt: custo=%.2f gap=%.2f%%\n", depoisIMB.Custo, pcv.Gap(depoisIMB.Custo, otimo))
+	imbOrOpt := pcv.OrOpt{}.Aplica(imb, in)
+	fmt.Printf("[%s] IMB+OrOpt: %.2f -> %.2f (gap %.2f%%)\n",
+		in.Nome, imb.Custo, imbOrOpt.Custo, pcv.Gap(imbOrOpt.Custo, otimo))
 
-	// 3. Algoritmo Genético
+	// (3) Algoritmo Genetico: 20 execucoes com sementes sementeBase+i
 	ag := pcv.AlgoritmoGenetico{Par: pcv.ParametrosPadrao()}
 	resumoAG := pcv.ExecutaExperimento(ag, in, execucoesEstocasticas, sementeBase)
-	caminhoAG := filepath.Join(saidas, "RESUMO_AG_"+in.Nome+".txt")
-	if err := os.WriteFile(caminhoAG, []byte(resumoAG.TextoResumo(in)), 0o644); err != nil {
-		fmt.Println("Erro ao escrever resumo AG:", err)
-		os.Exit(1)
-	}
-	fmt.Printf("   -> AG: menor=%.2f gap=%.2f%% media=%.2f\n", resumoAG.Melhor, pcv.Gap(resumoAG.Melhor, otimo), resumoAG.Media)
+	gravaArquivo(filepath.Join(saidas, "RESUMO_AG_"+in.Nome+".txt"), resumoAG.TextoResumo(in))
+	fmt.Printf("[%s] AG: menor=%.2f media=%.2f\n", in.Nome, resumoAG.Melhor, resumoAG.Media)
 
-	// 4. Algoritmo Memético
+	// (4) Algoritmo Memetico: 20 execucoes com sementes sementeBase+i
 	memetico := pcv.AlgoritmoMemetico{Par: pcv.ParametrosMemeticoPadrao()}
-	resumoMemetico := pcv.ExecutaExperimento(memetico, in, execucoesEstocasticas, sementeBase)
-	caminhoMemetico := filepath.Join(saidas, "RESUMO_MEMETICO_"+in.Nome+".txt")
-	if err := os.WriteFile(caminhoMemetico, []byte(resumoMemetico.TextoResumo(in)), 0o644); err != nil {
-		fmt.Println("Erro ao escrever resumo Memetico:", err)
-		os.Exit(1)
-	}
-	fmt.Printf("   -> Memetico: menor=%.2f gap=%.2f%% media=%.2f\n", resumoMemetico.Melhor, pcv.Gap(resumoMemetico.Melhor, otimo), resumoMemetico.Media)
-	fmt.Println(strings.Repeat("-", 50))
+	resumoMem := pcv.ExecutaExperimento(memetico, in, execucoesEstocasticas, sementeBase)
+	gravaArquivo(filepath.Join(saidas, "RESUMO_MEMETICO_"+in.Nome+".txt"), resumoMem.TextoResumo(in))
+	fmt.Printf("[%s] Memetico: menor=%.2f media=%.2f\n", in.Nome, resumoMem.Melhor, resumoMem.Media)
 
-	return ResultadoInstancia{
-		Nome:      in.Nome,
+	// Relatorio por instancia com as 5 secoes (instancia + 4 metodos)
+	gravaArquivo(filepath.Join(saidas, in.Nome+".txt"),
+		relatorioInstancia(in, vmp, vmp2opt, imb, imbOrOpt, resumoAG, resumoMem))
+
+	// Imagens PNG das rotas resultantes de cada metodo (uma por metodo)
+	if gerarImagens {
+		geraImagensRota(in, saidas, vmp2opt, imbOrOpt, resumoAG.MelhorRota, resumoMem.MelhorRota)
+	}
+
+	return relatorio.LinhaComparativo{
+		Instancia: in.Nome,
 		Otimo:     otimo,
-		VMP_2opt:  depoisVMP.Custo,
-		IMB_OrOpt: depoisIMB.Custo,
+		VMP:       vmp2opt.Custo,
+		IMB:       imbOrOpt.Custo,
 		AG:        resumoAG.Melhor,
-		Memetico:  resumoMemetico.Melhor,
+		Memetico:  resumoMem.Melhor,
 	}
 }
 
-func gerarComparativoGeral(resultados []ResultadoInstancia, saidas string) {
+// relatorioInstancia monta o texto do relatorio por instancia com as secoes
+// INSTANCIA, VIZINHO_MAIS_PROXIMO (antes/depois do 2-opt), INSERCAO_MAIS_BARATA
+// (antes/depois do Or-opt), ALGORITMO_GENETICO e ALGORITMO_MEMETICO.
+func relatorioInstancia(in *pcv.Instancia, vmp, vmp2opt, imb, imbOrOpt pcv.Rota, resumoAG, resumoMem pcv.ResumoExperimento) string {
 	var sb strings.Builder
-	_, _ = sb.WriteString("==========================================================================================\n")
-	_, _ = sb.WriteString("                              COMPARATIVO GERAL DOS ALGORITMOS\n")
-	_, _ = sb.WriteString("==========================================================================================\n\n")
-
-	_, _ = sb.WriteString(fmt.Sprintf("%-12s | %10s | %10s | %10s | %10s | %10s\n",
-		"Instancia", "Otimo", "VMP+2opt", "IMB+OrOpt", "AG(Menor)", "Memetico"))
-	_, _ = sb.WriteString(strings.Repeat("-", 90) + "\n")
-
-	for _, r := range resultados {
-		// Formata os custos e gaps
-		sOtimo := fmt.Sprintf("%.2f", r.Otimo)
-		sVMP := fmt.Sprintf("%.2f (%.1f%%)", r.VMP_2opt, pcv.Gap(r.VMP_2opt, r.Otimo))
-		sIMB := fmt.Sprintf("%.2f (%.1f%%)", r.IMB_OrOpt, pcv.Gap(r.IMB_OrOpt, r.Otimo))
-		sAG := fmt.Sprintf("%.2f (%.1f%%)", r.AG, pcv.Gap(r.AG, r.Otimo))
-		sMem := fmt.Sprintf("%.2f (%.1f%%)", r.Memetico, pcv.Gap(r.Memetico, r.Otimo))
-
-		_, _ = sb.WriteString(fmt.Sprintf("%-12s | %10s | %14s | %14s | %14s | %14s\n",
-			r.Nome, sOtimo, sVMP, sIMB, sAG, sMem))
+	sep := strings.Repeat("=", 50)
+	secao := func(titulo, corpo string) {
+		fmt.Fprintf(&sb, "[%s]\n%s\n", titulo, corpo)
 	}
 
-	_, _ = sb.WriteString(strings.Repeat("-", 90) + "\n")
-	
-	caminho := filepath.Join(saidas, "COMPARATIVO_GERAL.txt")
-	if err := os.WriteFile(caminho, []byte(sb.String()), 0o644); err != nil {
-		fmt.Println("Erro ao escrever COMPARATIVO_GERAL:", err)
+	fmt.Fprintf(&sb, "%s\n RELATORIO - %s\n%s\n\n", sep, in.Nome, sep)
+	secao("INSTANCIA", relatorio.FormataInstanciaPCV(in))
+	secao("VIZINHO_MAIS_PROXIMO", relatorio.FormataRotaPCV(in, vmp, vmp2opt, "2-opt"))
+	secao("INSERCAO_MAIS_BARATA", relatorio.FormataRotaPCV(in, imb, imbOrOpt, "Or-opt"))
+	secao("ALGORITMO_GENETICO", relatorio.FormataResumoPCV(resumoAG, in))
+	secao("ALGORITMO_MEMETICO", relatorio.FormataResumoPCV(resumoMem, in))
+	return sb.String()
+}
+
+// geraImagensRota grava um PNG por metodo com a rota resultante desenhada
+// sobre as cidades, usando as posicoes 2D do layout MDS (mesmas do front).
+func geraImagensRota(in *pcv.Instancia, saidas string, vmp2opt, imbOrOpt, ag, memetico pcv.Rota) {
+	// posicoes 2D do MDS (normalizadas em [0.05, 0.95]), indexadas por posicao
+	pontos := make([]relatorio.PontoPlano, in.N)
+	for pos, dto := range web.PosicoesMDS(in) {
+		pontos[pos] = relatorio.PontoPlano{X: dto.X, Y: dto.Y, Id: dto.ID, Nome: dto.Nome}
+	}
+
+	tituloGrafo := fmt.Sprintf("%s - grafo completo (%d cidades)", in.Nome, in.N)
+	if err := relatorio.GerarPNGGrafoPCV(in, pontos, tituloGrafo, in.Nome+"_GRAFO", saidas); err != nil {
+		fmt.Printf("[%s] aviso: falha ao gerar %s_GRAFO.png: %v\n", in.Nome, in.Nome, err)
+	}
+
+	imgs := []struct {
+		rota   pcv.Rota
+		metodo string
+	}{
+		{vmp2opt, "VMP_2OPT"},
+		{imbOrOpt, "IMB_OROPT"},
+		{ag, "AG"},
+		{memetico, "MEMETICO"},
+	}
+	for _, img := range imgs {
+		titulo := fmt.Sprintf("%s - %s - custo %.2f", in.Nome, img.metodo, img.rota.Custo)
+		nome := in.Nome + "_" + img.metodo
+		if err := relatorio.GerarPNGRotaPCV(in, pontos, img.rota, titulo, nome, saidas); err != nil {
+			fmt.Printf("[%s] aviso: falha ao gerar %s.png: %v\n", in.Nome, nome, err)
+		}
+	}
+}
+
+// gravaArquivo escreve conteudo em caminho e aborta o programa em caso de
+// erro de escrita (o make u3 nao deve seguir com saidas parciais).
+func gravaArquivo(caminho, conteudo string) {
+	if err := os.WriteFile(caminho, []byte(conteudo), 0o644); err != nil {
+		fmt.Println("Erro:", err)
 		os.Exit(1)
 	}
-	fmt.Println("Arquivo COMPARATIVO_GERAL.txt gerado com sucesso!")
 }

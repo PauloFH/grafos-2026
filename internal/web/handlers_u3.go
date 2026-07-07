@@ -60,29 +60,31 @@ func (s *Server) handleResolveU3(w http.ResponseWriter, r *http.Request) {
 
 	switch metodo {
 	case "vmp":
-		// construtivo deterministico - a semente e ignorada. Quando o 2-opt
-		// existir: Antes = rota construtiva, Rota = pcv.DoisOpt{}.Aplica(rota, in).
+		// deterministico (semente ignorada): Antes = construtivo (VMP),
+		// Rota = apos a busca local 2-opt.
 		inicio := time.Now()
-		rota := pcv.VizinhoMaisProximo{}.Constroi(in)
+		antes := pcv.VizinhoMaisProximo{}.Constroi(in)
+		rota := pcv.DoisOpt{}.Aplica(antes, in)
 		tempoMs := float64(time.Since(inicio).Nanoseconds()) / 1e6
 		escreveJSON(w, http.StatusOK, SolveResponse{
 			OK:         true,
 			Metodo:     metodo,
-			Antes:      nil,
+			Antes:      &RotaDTO{Ordem: antes.IdsOriginais(in), Custo: antes.Custo},
 			Rota:       RotaDTO{Ordem: rota.IdsOriginais(in), Custo: rota.Custo},
 			GapPercent: pcv.Gap(rota.Custo, pcv.ValoresOtimos[in.Nome]),
 			TempoMs:    tempoMs,
 		})
 	case "imb":
-		// construtivo deterministico - a semente e ignorada. Quando o Or-opt
-		// existir: Antes = rota construtiva, Rota = pcv.OrOpt{}.Aplica(rota, in).
+		// deterministico (semente ignorada): Antes = construtivo (IMB),
+		// Rota = apos a busca local Or-opt.
 		inicio := time.Now()
-		rota := pcv.InsercaoMaisBarata{}.Constroi(in)
+		antes := pcv.InsercaoMaisBarata{}.Constroi(in)
+		rota := pcv.OrOpt{}.Aplica(antes, in)
 		tempoMs := float64(time.Since(inicio).Nanoseconds()) / 1e6
 		escreveJSON(w, http.StatusOK, SolveResponse{
 			OK:         true,
 			Metodo:     metodo,
-			Antes:      nil,
+			Antes:      &RotaDTO{Ordem: antes.IdsOriginais(in), Custo: antes.Custo},
 			Rota:       RotaDTO{Ordem: rota.IdsOriginais(in), Custo: rota.Custo},
 			GapPercent: pcv.Gap(rota.Custo, pcv.ValoresOtimos[in.Nome]),
 			TempoMs:    tempoMs,

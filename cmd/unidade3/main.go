@@ -49,7 +49,7 @@ func main() {
 	imprimeTabelaInstancias(instancias)
 	fmt.Println()
 
-	var resultados []ResultadoInstancia
+	resultados := make([]ResultadoInstancia, 0, len(instancias))
 
 	for _, in := range instancias {
 		res := processaInstancia(in, saidas)
@@ -92,14 +92,20 @@ func processaInstancia(in *pcv.Instancia, saidas string) ResultadoInstancia {
 	ag := pcv.AlgoritmoGenetico{Par: pcv.ParametrosPadrao()}
 	resumoAG := pcv.ExecutaExperimento(ag, in, execucoesEstocasticas, sementeBase)
 	caminhoAG := filepath.Join(saidas, "RESUMO_AG_"+in.Nome+".txt")
-	os.WriteFile(caminhoAG, []byte(resumoAG.TextoResumo(in)), 0o644)
+	if err := os.WriteFile(caminhoAG, []byte(resumoAG.TextoResumo(in)), 0o644); err != nil {
+		fmt.Println("Erro ao escrever resumo AG:", err)
+		os.Exit(1)
+	}
 	fmt.Printf("   -> AG: menor=%.2f gap=%.2f%% media=%.2f\n", resumoAG.Melhor, pcv.Gap(resumoAG.Melhor, otimo), resumoAG.Media)
 
 	// 4. Algoritmo Memético
 	memetico := pcv.AlgoritmoMemetico{Par: pcv.ParametrosMemeticoPadrao()}
 	resumoMemetico := pcv.ExecutaExperimento(memetico, in, execucoesEstocasticas, sementeBase)
 	caminhoMemetico := filepath.Join(saidas, "RESUMO_MEMETICO_"+in.Nome+".txt")
-	os.WriteFile(caminhoMemetico, []byte(resumoMemetico.TextoResumo(in)), 0o644)
+	if err := os.WriteFile(caminhoMemetico, []byte(resumoMemetico.TextoResumo(in)), 0o644); err != nil {
+		fmt.Println("Erro ao escrever resumo Memetico:", err)
+		os.Exit(1)
+	}
 	fmt.Printf("   -> Memetico: menor=%.2f gap=%.2f%% media=%.2f\n", resumoMemetico.Melhor, pcv.Gap(resumoMemetico.Melhor, otimo), resumoMemetico.Media)
 	fmt.Println(strings.Repeat("-", 50))
 
@@ -138,6 +144,9 @@ func gerarComparativoGeral(resultados []ResultadoInstancia, saidas string) {
 	_, _ = sb.WriteString(strings.Repeat("-", 90) + "\n")
 	
 	caminho := filepath.Join(saidas, "COMPARATIVO_GERAL.txt")
-	_ = os.WriteFile(caminho, []byte(sb.String()), 0o644)
+	if err := os.WriteFile(caminho, []byte(sb.String()), 0o644); err != nil {
+		fmt.Println("Erro ao escrever COMPARATIVO_GERAL:", err)
+		os.Exit(1)
+	}
 	fmt.Println("Arquivo COMPARATIVO_GERAL.txt gerado com sucesso!")
 }

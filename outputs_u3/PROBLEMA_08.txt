@@ -1,0 +1,52 @@
+==================================================
+ RELATORIO - PROBLEMA_08
+==================================================
+
+[INSTANCIA]
+  Medida : MIN
+  Cidades: 12
+     1 ANGICOS
+     2 SAO RAFAEL
+     3 ITAJA
+     4 ASSU
+     5 JUCURUTU
+     6 MOSSORO
+     7 NATAL
+     8 AFONSO BEZERRA
+     9 PEDRO AVELINO
+    10 FERNANDO PEDROSA
+    11 SANTANA DO MATOS
+    12 LAJES
+
+[VIZINHO_MAIS_PROXIMO]
+  Busca local : 2-opt
+  Rota antes  : 1 -> 8 -> 9 -> 12 -> 10 -> 11 -> 5 -> 2 -> 3 -> 4 -> 6 -> 7 -> 1
+  Custo antes : 687.00
+  Rota depois : 1 -> 8 -> 9 -> 12 -> 7 -> 5 -> 11 -> 10 -> 3 -> 4 -> 6 -> 2 -> 1
+  Custo depois: 606.00
+  Melhora     : 11.79%
+
+[INSERCAO_MAIS_BARATA]
+  Busca local : Or-opt
+  Rota antes  : 1 -> 6 -> 4 -> 3 -> 2 -> 5 -> 11 -> 10 -> 12 -> 7 -> 9 -> 8 -> 1
+  Custo antes : 609.00
+  Rota depois : 1 -> 6 -> 4 -> 3 -> 2 -> 5 -> 11 -> 10 -> 12 -> 7 -> 9 -> 8 -> 1
+  Custo depois: 609.00
+  Melhora     : 0.00%
+
+[ALGORITMO_GENETICO]
+  Execucoes   : 20
+  Menor valor : 606.00
+  Valor medio : 607.70
+  Tempo medio : 0.007s
+  Gap do menor: 0.00%
+  Melhor rota : 1 -> 8 -> 9 -> 12 -> 7 -> 5 -> 11 -> 10 -> 3 -> 4 -> 6 -> 2 -> 1
+
+[ALGORITMO_MEMETICO]
+  Execucoes   : 20
+  Menor valor : 606.00
+  Valor medio : 606.00
+  Tempo medio : 0.035s
+  Gap do menor: 0.00%
+  Melhor rota : 1 -> 2 -> 6 -> 4 -> 3 -> 10 -> 11 -> 5 -> 7 -> 12 -> 9 -> 8 -> 1
+

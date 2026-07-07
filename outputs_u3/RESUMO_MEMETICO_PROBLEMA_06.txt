@@ -5,7 +5,7 @@ Instancia        : PROBLEMA_06 (MIN, N=24)
 Execucoes        : 20
 Menor valor      : 1223.00
 Valor medio      : 1223.00
-Tempo medio      : 0.094s
+Tempo medio      : 0.286s
 Melhor conhecido : 1223.00
 Gap do menor     : 0.00%
 --------------------------------------------------

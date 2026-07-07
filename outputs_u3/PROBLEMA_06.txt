@@ -1,0 +1,64 @@
+==================================================
+ RELATORIO - PROBLEMA_06
+==================================================
+
+[INSTANCIA]
+  Medida : MIN
+  Cidades: 24
+     1 ANGICOS
+     2 SAO RAFAEL
+     3 ITAJA
+     4 ASSU
+     5 JUCURUTU
+     6 MOSSORO
+     7 NATAL
+     8 AFONSO BEZERRA
+     9 PEDRO AVELINO
+    10 FERNANDO PEDROSA
+    11 SANTANA DO MATOS
+    12 LAJES
+    13 SANTA CRUZ
+    14 CAICO
+    15 SAO MIGUEL
+    16 SAO JOSE DO MIPIBU
+    17 SAO GONCALO DO AMARANTE
+    18 PAU DOS FERROS
+    19 PARNAMIRIM
+    20 MACAIBA
+    21 MACAU
+    22 JOAO CAMARA
+    23 IPANGUACU
+    24 CURRAIS NOVOS
+
+[VIZINHO_MAIS_PROXIMO]
+  Busca local : 2-opt
+  Rota antes  : 1 -> 8 -> 9 -> 12 -> 10 -> 11 -> 5 -> 2 -> 3 -> 4 -> 23 -> 21 -> 22 -> 17 -> 20 -> 19 -> 16 -> 7 -> 13 -> 24 -> 14 -> 18 -> 15 -> 6 -> 1
+  Custo antes : 1283.00
+  Rota depois : 1 -> 8 -> 9 -> 12 -> 10 -> 11 -> 5 -> 2 -> 3 -> 4 -> 6 -> 15 -> 18 -> 14 -> 24 -> 13 -> 20 -> 16 -> 19 -> 7 -> 17 -> 22 -> 21 -> 23 -> 1
+  Custo depois: 1234.00
+  Melhora     : 3.82%
+
+[INSERCAO_MAIS_BARATA]
+  Busca local : Or-opt
+  Rota antes  : 1 -> 23 -> 6 -> 15 -> 18 -> 4 -> 3 -> 2 -> 20 -> 19 -> 16 -> 7 -> 17 -> 13 -> 24 -> 14 -> 5 -> 11 -> 10 -> 12 -> 9 -> 22 -> 21 -> 8 -> 1
+  Custo antes : 1389.00
+  Rota depois : 1 -> 2 -> 3 -> 4 -> 18 -> 15 -> 6 -> 23 -> 21 -> 22 -> 17 -> 7 -> 19 -> 16 -> 20 -> 13 -> 24 -> 14 -> 5 -> 11 -> 10 -> 12 -> 9 -> 8 -> 1
+  Custo depois: 1260.00
+  Melhora     : 9.29%
+
+[ALGORITMO_GENETICO]
+  Execucoes   : 20
+  Menor valor : 1223.00
+  Valor medio : 1251.35
+  Tempo medio : 0.022s
+  Gap do menor: 0.00%
+  Melhor rota : 1 -> 2 -> 3 -> 4 -> 23 -> 6 -> 15 -> 18 -> 14 -> 5 -> 24 -> 13 -> 20 -> 16 -> 19 -> 7 -> 17 -> 22 -> 21 -> 8 -> 9 -> 12 -> 10 -> 11 -> 1
+
+[ALGORITMO_MEMETICO]
+  Execucoes   : 20
+  Menor valor : 1223.00
+  Valor medio : 1223.00
+  Tempo medio : 0.286s
+  Gap do menor: 0.00%
+  Melhor rota : 1 -> 2 -> 3 -> 4 -> 23 -> 6 -> 15 -> 18 -> 14 -> 5 -> 24 -> 13 -> 20 -> 16 -> 19 -> 7 -> 17 -> 22 -> 21 -> 8 -> 9 -> 12 -> 10 -> 11 -> 1
+

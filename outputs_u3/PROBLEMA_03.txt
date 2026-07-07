@@ -1,0 +1,76 @@
+==================================================
+ RELATORIO - PROBLEMA_03
+==================================================
+
+[INSTANCIA]
+  Medida : KM
+  Cidades: 36
+     1 ANGICOS
+     2 SAO RAFAEL
+     3 ITAJA
+     4 ASSU
+     5 JUCURUTU
+     6 MOSSORO
+     7 NATAL
+     8 AFONSO BEZERRA
+     9 PEDRO AVELINO
+    10 FERNANDO PEDROSA
+    11 SANTANA DO MATOS
+    12 LAJES
+    13 SANTA CRUZ
+    14 CAICO
+    15 SAO MIGUEL
+    16 SAO JOSE DO MIPIBU
+    17 SAO GONCALO DO AMARANTE
+    18 PAU DOS FERROS
+    19 PARNAMIRIM
+    20 MACAIBA
+    21 MACAU
+    22 JOAO CAMARA
+    23 IPANGUACU
+    24 CURRAIS NOVOS
+    25 CEARA-MIRIM
+    26 CANGUARETAMA
+    27 BARAUNA
+    28 APODI
+    29 ACARI
+    30 AREIA BRANCA
+    31 EXTREMOZ
+    32 GOIANINHA
+    33 MONTE ALEGRE
+    34 NISIA FLORESTA
+    35 NOVA CRUZ
+    36 TOUROS
+
+[VIZINHO_MAIS_PROXIMO]
+  Busca local : 2-opt
+  Rota antes  : 1 -> 8 -> 9 -> 10 -> 12 -> 11 -> 2 -> 3 -> 4 -> 23 -> 21 -> 22 -> 25 -> 17 -> 7 -> 19 -> 16 -> 34 -> 33 -> 20 -> 31 -> 36 -> 32 -> 26 -> 35 -> 13 -> 24 -> 29 -> 14 -> 5 -> 28 -> 18 -> 15 -> 6 -> 27 -> 30 -> 1
+  Custo antes : 1951.50
+  Rota depois : 1 -> 8 -> 9 -> 12 -> 10 -> 11 -> 2 -> 3 -> 4 -> 30 -> 6 -> 27 -> 28 -> 15 -> 18 -> 5 -> 14 -> 29 -> 24 -> 13 -> 35 -> 26 -> 32 -> 34 -> 16 -> 33 -> 20 -> 19 -> 7 -> 17 -> 31 -> 25 -> 36 -> 22 -> 21 -> 23 -> 1
+  Custo depois: 1721.80
+  Melhora     : 11.77%
+
+[INSERCAO_MAIS_BARATA]
+  Busca local : Or-opt
+  Rota antes  : 1 -> 10 -> 12 -> 13 -> 20 -> 17 -> 33 -> 16 -> 32 -> 35 -> 26 -> 34 -> 19 -> 7 -> 31 -> 25 -> 36 -> 22 -> 9 -> 8 -> 21 -> 23 -> 3 -> 4 -> 30 -> 27 -> 6 -> 28 -> 15 -> 18 -> 2 -> 24 -> 29 -> 14 -> 5 -> 11 -> 1
+  Custo antes : 2007.50
+  Rota depois : 1 -> 10 -> 12 -> 29 -> 24 -> 13 -> 35 -> 26 -> 32 -> 34 -> 16 -> 33 -> 20 -> 19 -> 7 -> 17 -> 31 -> 25 -> 36 -> 22 -> 9 -> 8 -> 21 -> 30 -> 6 -> 27 -> 28 -> 15 -> 18 -> 14 -> 5 -> 11 -> 2 -> 3 -> 4 -> 23 -> 1
+  Custo depois: 1753.20
+  Melhora     : 12.67%
+
+[ALGORITMO_GENETICO]
+  Execucoes   : 20
+  Menor valor : 1698.70
+  Valor medio : 1748.21
+  Tempo medio : 0.053s
+  Gap do menor: -0.40%
+  Melhor rota : 1 -> 23 -> 4 -> 3 -> 2 -> 11 -> 10 -> 12 -> 9 -> 22 -> 36 -> 25 -> 31 -> 17 -> 7 -> 19 -> 20 -> 33 -> 16 -> 34 -> 32 -> 26 -> 35 -> 13 -> 24 -> 29 -> 14 -> 5 -> 18 -> 15 -> 28 -> 27 -> 6 -> 30 -> 21 -> 8 -> 1
+
+[ALGORITMO_MEMETICO]
+  Execucoes   : 20
+  Menor valor : 1695.00
+  Valor medio : 1695.53
+  Tempo medio : 1.150s
+  Gap do menor: -0.62%
+  Melhor rota : 1 -> 8 -> 9 -> 21 -> 30 -> 6 -> 27 -> 28 -> 15 -> 18 -> 14 -> 29 -> 24 -> 13 -> 35 -> 26 -> 32 -> 34 -> 16 -> 33 -> 20 -> 19 -> 7 -> 17 -> 31 -> 25 -> 36 -> 22 -> 12 -> 10 -> 11 -> 5 -> 2 -> 3 -> 4 -> 23 -> 1
+

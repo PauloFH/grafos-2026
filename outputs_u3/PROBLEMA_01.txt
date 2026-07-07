@@ -1,0 +1,88 @@
+==================================================
+ RELATORIO - PROBLEMA_01
+==================================================
+
+[INSTANCIA]
+  Medida : KM
+  Cidades: 48
+     1 ANGICOS
+     2 SAO RAFAEL
+     3 ITAJA
+     4 ASSU
+     5 JUCURUTU
+     6 MOSSORO
+     7 NATAL
+     8 AFONSO BEZERRA
+     9 PEDRO AVELINO
+    10 FERNANDO PEDROSA
+    11 SANTANA DO MATOS
+    12 LAJES
+    13 SANTA CRUZ
+    14 CAICO
+    15 SAO MIGUEL
+    16 SAO JOSE DO MIPIBU
+    17 SAO GONCALO DO AMARANTE
+    18 PAU DOS FERROS
+    19 PARNAMIRIM
+    20 MACAIBA
+    21 MACAU
+    22 JOAO CAMARA
+    23 IPANGUACU
+    24 CURRAIS NOVOS
+    25 CEARA-MIRIM
+    26 CANGUARETAMA
+    27 BARAUNA
+    28 APODI
+    29 ACARI
+    30 AREIA BRANCA
+    31 EXTREMOZ
+    32 GOIANINHA
+    33 MONTE ALEGRE
+    34 NISIA FLORESTA
+    35 NOVA CRUZ
+    36 TOUROS
+    37 TANGARA
+    38 SAO PAULO DO POTENGI
+    39 SANTO ANTONIO
+    40 TAIPU
+    41 UPANEMA
+    42 PEDRO VELHO
+    43 PARELHAS
+    44 CARAUBAS
+    45 ALEXANDRIA
+    46 JARDIM DE PIRANHAS
+    47 SAO JOSE DO CAMPESTRE
+    48 POCO BRANCO
+
+[VIZINHO_MAIS_PROXIMO]
+  Busca local : 2-opt
+  Rota antes  : 1 -> 8 -> 9 -> 10 -> 12 -> 11 -> 2 -> 3 -> 4 -> 23 -> 21 -> 22 -> 48 -> 40 -> 25 -> 17 -> 7 -> 19 -> 16 -> 34 -> 33 -> 20 -> 38 -> 37 -> 47 -> 39 -> 35 -> 42 -> 26 -> 32 -> 31 -> 36 -> 13 -> 24 -> 29 -> 43 -> 14 -> 46 -> 5 -> 41 -> 6 -> 27 -> 30 -> 44 -> 28 -> 18 -> 15 -> 45 -> 1
+  Custo antes : 2291.40
+  Rota depois : 1 -> 8 -> 9 -> 12 -> 10 -> 11 -> 5 -> 41 -> 30 -> 6 -> 27 -> 44 -> 28 -> 15 -> 18 -> 45 -> 46 -> 14 -> 43 -> 29 -> 24 -> 13 -> 37 -> 47 -> 39 -> 35 -> 42 -> 26 -> 32 -> 34 -> 16 -> 33 -> 20 -> 38 -> 17 -> 19 -> 7 -> 31 -> 25 -> 36 -> 40 -> 48 -> 22 -> 21 -> 23 -> 4 -> 3 -> 2 -> 1
+  Custo depois: 1986.20
+  Melhora     : 13.32%
+
+[INSERCAO_MAIS_BARATA]
+  Busca local : Or-opt
+  Rota antes  : 1 -> 10 -> 12 -> 36 -> 48 -> 40 -> 25 -> 31 -> 7 -> 19 -> 34 -> 39 -> 35 -> 42 -> 26 -> 32 -> 16 -> 33 -> 20 -> 17 -> 37 -> 47 -> 13 -> 38 -> 22 -> 9 -> 8 -> 21 -> 23 -> 3 -> 4 -> 41 -> 44 -> 45 -> 18 -> 15 -> 28 -> 6 -> 27 -> 30 -> 2 -> 24 -> 29 -> 43 -> 14 -> 46 -> 5 -> 11 -> 1
+  Custo antes : 2348.70
+  Rota depois : 1 -> 10 -> 12 -> 22 -> 48 -> 40 -> 36 -> 25 -> 31 -> 17 -> 7 -> 19 -> 34 -> 39 -> 35 -> 42 -> 26 -> 32 -> 16 -> 33 -> 20 -> 37 -> 47 -> 13 -> 38 -> 9 -> 8 -> 3 -> 4 -> 41 -> 44 -> 45 -> 18 -> 15 -> 28 -> 27 -> 6 -> 30 -> 21 -> 23 -> 2 -> 24 -> 29 -> 43 -> 14 -> 46 -> 5 -> 11 -> 1
+  Custo depois: 2277.80
+  Melhora     : 3.02%
+
+[ALGORITMO_GENETICO]
+  Execucoes   : 20
+  Menor valor : 1974.80
+  Valor medio : 2084.15
+  Tempo medio : 0.078s
+  Gap do menor: 1.67%
+  Melhor rota : 1 -> 8 -> 9 -> 21 -> 30 -> 6 -> 27 -> 41 -> 44 -> 28 -> 18 -> 15 -> 45 -> 46 -> 5 -> 14 -> 43 -> 29 -> 24 -> 13 -> 37 -> 47 -> 39 -> 35 -> 42 -> 26 -> 32 -> 34 -> 16 -> 33 -> 20 -> 17 -> 19 -> 7 -> 31 -> 25 -> 36 -> 40 -> 48 -> 22 -> 38 -> 12 -> 10 -> 11 -> 2 -> 4 -> 3 -> 23 -> 1
+
+[ALGORITMO_MEMETICO]
+  Execucoes   : 20
+  Menor valor : 1942.30
+  Valor medio : 1946.58
+  Tempo medio : 3.004s
+  Gap do menor: -0.00%
+  Melhor rota : 1 -> 8 -> 9 -> 21 -> 30 -> 6 -> 27 -> 41 -> 44 -> 28 -> 15 -> 18 -> 45 -> 46 -> 14 -> 43 -> 29 -> 24 -> 13 -> 37 -> 47 -> 39 -> 35 -> 42 -> 26 -> 32 -> 34 -> 16 -> 33 -> 20 -> 19 -> 7 -> 17 -> 31 -> 25 -> 36 -> 40 -> 48 -> 22 -> 38 -> 12 -> 10 -> 11 -> 5 -> 2 -> 3 -> 4 -> 23 -> 1
+

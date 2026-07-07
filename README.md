@@ -187,11 +187,11 @@ GET /api/u3/resolve?id=PROBLEMA_01&metodo=vmp|imb|ag|memetico[&semente=42] → 1
 | 0 | Base — contrato `internal/pcv`, instâncias, esqueleto do CLI (concluída) | — | `modelo.go`, `leitor_pcv.go`, `referencia.go`, `inputs_u3/`, `cmd/unidade3/main.go` |
 | 1 | Vizinho mais Próximo | Diego | `vizinho_mais_proximo.go` |
 | 2 | Inserção mais Barata | Diego | `insercao_mais_barata.go` |
-| 3 | Algoritmo Genético | _a definir_ | `genetico.go`, `operadores.go`, `experimento.go` |
+| 3 | Algoritmo Genético | Paulo | `genetico.go`, `operadores.go`, `experimento.go` |
 | 4 | 2-opt | João Marcelo | `busca_local_2opt.go` |
 | 5 | Or-opt | João Marcelo | `busca_local_oropt.go` |
 | 6 | Algoritmo Memético (inclui a busca Swap) | João Victor | `memetico.go`, `busca_local_swap.go` |
-| 7 | Front web U3 — API, servidor e integração final | _a definir_ | `cmd/servidor/web/u3/`, `handlers_u3.go`, `layout_mds.go`, divisão U2/U3 do servidor, `cmd/unidade3/main.go` final, `COMPARATIVO_GERAL` |
+| 7 | Front web U3 — API, servidor e integração final | Paulo | `cmd/servidor/web/u3/`, `handlers_u3.go`, `layout_mds.go`, divisão U2/U3 do servidor, `cmd/unidade3/main.go` final, `COMPARATIVO_GERAL` |
 | — | Relatório escrito, planilha de resultados e vídeo | Todos | — |
 
 ---

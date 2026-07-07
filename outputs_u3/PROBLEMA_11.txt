@@ -1,0 +1,46 @@
+==================================================
+ RELATORIO - PROBLEMA_11
+==================================================
+
+[INSTANCIA]
+  Medida : KM
+  Cidades: 6
+     1 ANGICOS
+     2 SAO RAFAEL
+     3 ITAJA
+     4 ASSU
+     5 JUCURUTU
+     6 MOSSORO
+
+[VIZINHO_MAIS_PROXIMO]
+  Busca local : 2-opt
+  Rota antes  : 1 -> 3 -> 4 -> 2 -> 5 -> 6 -> 1
+  Custo antes : 463.60
+  Rota depois : 1 -> 5 -> 2 -> 3 -> 4 -> 6 -> 1
+  Custo depois: 348.30
+  Melhora     : 24.87%
+
+[INSERCAO_MAIS_BARATA]
+  Busca local : Or-opt
+  Rota antes  : 1 -> 6 -> 4 -> 3 -> 2 -> 5 -> 1
+  Custo antes : 348.30
+  Rota depois : 1 -> 6 -> 4 -> 3 -> 2 -> 5 -> 1
+  Custo depois: 348.30
+  Melhora     : 0.00%
+
+[ALGORITMO_GENETICO]
+  Execucoes   : 20
+  Menor valor : 344.90
+  Valor medio : 344.90
+  Tempo medio : 0.004s
+  Gap do menor: 0.00%
+  Melhor rota : 1 -> 2 -> 5 -> 4 -> 6 -> 3 -> 1
+
+[ALGORITMO_MEMETICO]
+  Execucoes   : 20
+  Menor valor : 344.90
+  Valor medio : 344.90
+  Tempo medio : 0.005s
+  Gap do menor: 0.00%
+  Melhor rota : 1 -> 2 -> 5 -> 4 -> 6 -> 3 -> 1
+

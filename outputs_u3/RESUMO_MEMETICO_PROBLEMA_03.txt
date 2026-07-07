@@ -5,7 +5,7 @@ Instancia        : PROBLEMA_03 (KM, N=36)
 Execucoes        : 20
 Menor valor      : 1695.00
 Valor medio      : 1695.53
-Tempo medio      : 0.371s
+Tempo medio      : 1.150s
 Melhor conhecido : 1705.60
 Gap do menor     : -0.62%
 --------------------------------------------------

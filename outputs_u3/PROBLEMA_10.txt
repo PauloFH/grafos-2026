@@ -1,0 +1,47 @@
+==================================================
+ RELATORIO - PROBLEMA_10
+==================================================
+
+[INSTANCIA]
+  Medida : MIN
+  Cidades: 7
+     1 ANGICOS
+     7 NATAL
+     8 AFONSO BEZERRA
+     9 PEDRO AVELINO
+    10 FERNANDO PEDROSA
+    11 SANTANA DO MATOS
+    12 LAJES
+
+[VIZINHO_MAIS_PROXIMO]
+  Busca local : 2-opt
+  Rota antes  : 1 -> 8 -> 9 -> 12 -> 10 -> 11 -> 7 -> 1
+  Custo antes : 413.00
+  Rota depois : 1 -> 8 -> 9 -> 7 -> 12 -> 10 -> 11 -> 1
+  Custo depois: 364.00
+  Melhora     : 11.86%
+
+[INSERCAO_MAIS_BARATA]
+  Busca local : Or-opt
+  Rota antes  : 1 -> 11 -> 10 -> 12 -> 7 -> 9 -> 8 -> 1
+  Custo antes : 364.00
+  Rota depois : 1 -> 11 -> 10 -> 12 -> 7 -> 9 -> 8 -> 1
+  Custo depois: 364.00
+  Melhora     : 0.00%
+
+[ALGORITMO_GENETICO]
+  Execucoes   : 20
+  Menor valor : 364.00
+  Valor medio : 364.00
+  Tempo medio : 0.005s
+  Gap do menor: 0.00%
+  Melhor rota : 1 -> 11 -> 10 -> 12 -> 7 -> 9 -> 8 -> 1
+
+[ALGORITMO_MEMETICO]
+  Execucoes   : 20
+  Menor valor : 364.00
+  Valor medio : 364.00
+  Tempo medio : 0.007s
+  Gap do menor: 0.00%
+  Melhor rota : 1 -> 8 -> 9 -> 7 -> 12 -> 10 -> 11 -> 1
+
